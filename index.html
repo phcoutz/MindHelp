@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindHelp | Cuidado e Conexão</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-black: #050505;
+            --gray-card: #121212;
+            --deep-purple: #3c096c;
+            --main-purple: #7b2cbf;
+            --light-purple: #c77dff;
+            --text-white: #f8f9fa;
+            --emergency: #d32f2f;
+            --transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-black);
+            color: var(--text-white);
+            overflow-x: hidden;
+            transition: font-size 0.3s ease;
+        }
+
+        /* --- TELA DE ENTRADA --- */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100vh;
+            background: radial-gradient(circle at center, var(--deep-purple) 0%, var(--bg-black) 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 9999; transition: var(--transition);
+        }
+
+        .logo-container { text-align: center; }
+        .logo-container h1 {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 700; letter-spacing: 12px;
+            background: linear-gradient(to bottom, #fff 40%, var(--main-purple));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-transform: uppercase; margin-bottom: 10px;
+        }
+
+        .btn-start {
+            margin-top: 20px; padding: 15px 45px;
+            background: transparent; border: 1px solid var(--light-purple);
+            color: var(--text-white); border-radius: 50px; cursor: pointer;
+            letter-spacing: 2px; transition: 0.4s; font-weight: bold;
+        }
+
+        .btn-start:hover {
+            background: var(--main-purple); box-shadow: 0 0 30px var(--main-purple);
+            transform: translateY(-3px);
+        }
+
+        /* --- LAYOUT --- */
+        #main-app { display: flex; min-height: 100vh; }
+
+        aside {
+            width: 280px; background: #000; border-right: 1px solid #222;
+            padding: 30px 20px; position: fixed; height: 100vh;
+            display: flex; flex-direction: column; z-index: 100;
+        }
+
+        main { margin-left: 280px; padding: 40px; width: calc(100% - 280px); }
+
+        @media (max-width: 768px) {
+            aside { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid #222; padding: 15px; }
+            main { margin-left: 0; width: 100%; padding: 20px; }
+        }
+
+        .nav-link {
+            padding: 12px 15px; margin-bottom: 5px; border-radius: 12px;
+            cursor: pointer; display: flex; align-items: center; gap: 15px;
+            color: #888; transition: 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active { background: #1a1a1a; color: var(--light-purple); }
+
+        .btn-sos {
+            margin-top: auto; background: var(--emergency); color: white;
+            padding: 15px; border-radius: 12px; text-align: center;
+            font-weight: bold; cursor: pointer; text-decoration: none;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .card {
+            background: var(--gray-card); border: 1px solid #222;
+            border-radius: 20px; padding: 30px; margin-bottom: 20px;
+        }
+
+/* --- DASHBOARD E CARDS --- */
+        .dashboard-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px; margin-top: 30px;
+        }
+        
+        .card {
+            background: var(--gray-card); border: 1px solid #222;
+            border-radius: 20px; padding: 30px; transition: 0.3s; position: relative;
+            margin-bottom: 20px;
+        }
+
+        /* --- RESPIRAÇÃO --- */
+        .breath-container {
+            text-align: center;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        #timer-display {
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--light-purple);
+            margin-bottom: 10px;
+            font-variant-numeric: tabular-nums; /* Evita que os números "pulem" */
+        }
+
+        .breath-circle {
+            width: 160px; height: 160px;
+            background: radial-gradient(circle, var(--light-purple), var(--main-purple));
+            border-radius: 50%;
+            margin: 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 40px rgba(123, 44, 191, 0.3);
+            transition: transform 4s ease-in-out;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: white;
+            text-transform: uppercase;
+            transition: transform 4s ease-in-out; /* O JS vai mudar esse '4s' dinamicamente */
+            will-change: transform; /* Ajuda na performance da animação */
+        }
+
+        .breath-controls {
+            margin-top: 30px;
+            padding: 20px;
+            background: #0a0a0a;
+            border-radius: 20px;
+            border: 1px solid #1a1a1a;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 150px;
+            height: 4px;
+            background: #333;
+            border-radius: 5px;
+            outline: none;
+            margin: 15px 0;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            background: var(--light-purple);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--main-purple);
+        }
+
+        .btn-control {
+            background: transparent;
+            border: 1px solid var(--light-purple);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.3s;
+            margin: 0 5px 10px 5px;
+        }
+
+        .btn-control:hover { background: var(--main-purple); }
+        
+        /* Estilos para o Diário */
+       .diary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .btn-delete {
+            background: transparent;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            transition: 0.3s;
+            padding: 5px;
+            font-size: 1rem;
+        }
+
+        .btn-delete:hover {
+            color: var(--emergency);
+        }
+
+        /* --- CHAT --- */
+        #chat-container {
+            background: #000; border-radius: 12px; height: 300px;
+            display: flex; flex-direction: column; border: 1px solid #222; overflow: hidden;
+        }
+        #chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 10px 15px; border-radius: 15px; max-width: 80%; font-size: 0.8rem; }
+        .msg.bot { background: #222; align-self: flex-start; color: var(--light-purple); }
+        .msg.user { background: var(--main-purple); align-self: flex-end; color: white; }
+        .chat-input-area { display: flex; border-top: 1px solid #222; }
+        .chat-input-area input { background: transparent; border: none; color: white; padding: 10px; flex-grow: 1; outline: none; }
+        .btn-send { background: var(--main-purple); border: none; color: white; padding: 0 15px; cursor: pointer; }
+
+        @keyframes fadeInContent { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- ORGANIZAÇÃO DA DASHBOARD --- */
+        .dashboard-grid {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+         gap: 25px;
+         margin-top: 20px;
+        }
+
+        /* Ajuste para os cards da home ficarem com a mesma altura */
+        .dashboard-grid .card {
+         height: 100%;
+         display: flex;
+         flex-direction: column;
+         margin-bottom: 0; /* O gap da grid já resolve o espaçamento */
+        }
+
+        /* Estilo do Gerador de Frases */
+        .quote-card {
+         text-align: center;
+         justify-content: center;
+         min-height: 250px;
+        }
+
+        #quote-text {
+         font-style: italic;
+         font-size: 1.1rem;
+         color: var(--light-purple);
+         margin: 20px 0;
+         line-height: 1.6;
+         transition: opacity 0.3s ease;
+        }
+
+        /* Estilo da Lista de Vídeos */
+        .video-grid {
+          display: flex;
+         flex-direction: column;
+         gap: 15px;
+         margin-top: 15px;
+        }
+
+        .video-item {
+         display: flex;
+         align-items: center;
+         gap: 15px;
+         background: #000;
+         padding: 12px;
+         border-radius: 12px;
+         text-decoration: none;
+         color: white;
+         border: 1px solid #222;
+         transition: 0.3s;
+        }
+
+        .video-item:hover {
+         border-color: var(--main-purple);
+         background: #0a0a0a;
+         transform: translateX(5px);
+        }
+
+        .video-item i {
+         font-size: 1.8rem;
+         color: #ff0000;
+        }
+
+        /* --- NOVOS ESTILOS: HUMOR E CHECKLIST --- */
+       .mood-selector {
+         display: flex;
+         justify-content: space-between;
+         margin: 20px 0;
+         padding: 10px;
+         background: #0a0a0a;
+         border-radius: 15px;
+        }
+
+       .mood-btn {
+         background: transparent;
+         border: none;
+         font-size: 1.8rem;
+         cursor: pointer;
+         transition: 0.3s;
+         filter: grayscale(80%);
+        }
+
+       .mood-btn:hover, .mood-btn.active {
+         transform: scale(1.3);
+         filter: grayscale(0%);
+        }
+
+       .task-list {
+         list-style: none;
+         padding: 0;
+        }
+
+       .task-item {
+         display: flex;
+         align-items: center;
+         gap: 12px;
+         padding: 12px 0;
+         border-bottom: 1px solid #1a1a1a;
+        }
+
+       .task-item:last-child { border-bottom: none; }
+
+       .task-item input[type="checkbox"] {
+         accent-color: var(--main-purple);
+         width: 18px;
+         height: 18px;
+         cursor: pointer;
+        }
+
+       .task-item span {
+         font-size: 0.9rem;
+         color: #ccc;
+         transition: 0.3s;
+        }
+
+       .task-item input:checked + span {
+         text-decoration: line-through;
+         color: #555;
+        }
+       
+        /* --- ABA DE AGENDAMENTO --- */
+       .expert-grid {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+         gap: 20px;
+         margin-top: 20px;
+        }
+
+       .expert-card {
+         background: #0a0a0a;
+         border: 1px solid #222;
+         border-radius: 15px;
+         padding: 20px;
+         text-align: center;
+         transition: 0.3s;
+        }  
+
+       .expert-card:hover {
+         border-color: var(--main-purple);
+         transform: translateY(-5px);
+        }
+
+       .expert-avatar {
+         width: 80px;
+         height: 80px;
+         background: var(--gray-card);
+         border-radius: 50%;
+         margin: 0 auto 15px;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         font-size: 2rem;
+         color: var(--light-purple);
+         border: 2px solid var(--main-purple);
+        }
+
+       .specialty-tag {
+         background: var(--deep-purple);
+         color: var(--light-purple);
+         padding: 4px 12px;
+         border-radius: 20px;
+         font-size: 0.75rem;
+         display: inline-block;
+         margin-bottom: 10px;
+        }
+
+       .btn-schedule {
+         width: 100%;
+         margin-top: 15px;
+         background: var(--main-purple);
+         border: none;
+         color: white;
+         padding: 10px;
+         border-radius: 8px;
+         cursor: pointer;
+         font-weight: bold;
+         transition: 0.3s;
+        }
+
+       .btn-schedule:hover {
+         background: var(--light-purple);
+        }
+
+        #consultas {
+          animation: fadeInContent 0.5s ease-out;
+        }
+
+        /* --- ABA DE MEDITAÇÃO --- */
+       .meditation-grid {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+         gap: 20px;
+         margin-top: 25px;
+        }
+
+       .sound-card {
+         background: #0a0a0a;
+         border: 1px solid #222;
+         padding: 20px;
+         border-radius: 20px;
+         text-align: center;
+         cursor: pointer;
+         transition: 0.3s;
+        }
+
+      .sound-card:hover {
+         border-color: var(--main-purple);
+         transform: scale(1.05);
+        }
+
+      .sound-card i {
+         font-size: 2.5rem;
+         color: var(--light-purple);
+         margin-bottom: 15px;
+        }
+
+      .player-footer {
+         position: fixed;
+         bottom: 20px;
+         right: 20px;
+         width: 300px;
+         background: var(--gray-card);
+         border: 1px solid var(--main-purple);
+         padding: 15px;
+         border-radius: 15px;
+         display: none; /* Só aparece quando um som toca */
+         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+         z-index: 1000;
+        }
+
+      .player-controls {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+        }
+
+      #track-name {
+         font-size: 0.8rem;
+         font-weight: bold;
+         color: var(--light-purple);
+        }
+
+        /* --- ABA DE HÁBITOS --- */
+       .habit-container {
+         max-width: 800px;
+        }
+
+       .habit-card {
+         background: var(--gray-card);
+         border: 1px solid #222;
+         padding: 20px;
+         border-radius: 15px;
+         margin-bottom: 15px;
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+        }
+
+       .habit-info h4 {
+         color: var(--light-purple);
+         margin-bottom: 5px;
+       }
+
+       .habit-progress-bg {
+         width: 200px;
+         height: 8px;
+         background: #222;
+         border-radius: 10px;
+         margin-top: 10px;
+         overflow: hidden;
+       }
+
+      .habit-progress-fill {
+         height: 100%;
+         background: var(--main-purple);
+         width: 0%; /* Controlado pelo JS */
+         transition: width 0.5s ease;
+       }
+
+      .habit-action {
+         text-align: right;
+       }
+
+      .btn-habit {
+         background: #1a1a1a;
+         border: 1px solid var(--main-purple);
+         color: white;
+         padding: 8px 15px;
+         border-radius: 8px;
+         cursor: pointer;
+         transition: 0.3s;
+       }
+
+      .btn-habit:hover {
+         background: var(--main-purple);
+       }
+
+      .streak-badge {
+         font-size: 0.75rem;
+         color: #888;
+         margin-top: 5px;
+         display: block;
+       }
+
+       /* --- ABA BIBLIOTECA --- */
+      .library-grid {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+         gap: 25px;
+         margin-top: 20px;
+        }
+
+      .article-card {
+         background: var(--gray-card);
+         border: 1px solid #222;
+         border-radius: 20px;
+         overflow: hidden;
+         transition: 0.3s;
+         display: flex;
+         flex-direction: column;
+        }
+
+      .article-card:hover {
+         border-color: var(--main-purple);
+         transform: translateY(-5px);
+       }
+
+      .article-img {
+         width: 100%;
+         height: 150px;
+         background: linear-gradient(45deg, var(--deep-purple), var(--main-purple));
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         font-size: 3rem;
+         color: rgba(255,255,255,0.2);
+       }
+
+     .article-content {
+         padding: 20px;
+        }
+
+     .article-tag {
+         font-size: 0.7rem;
+         color: var(--light-purple);
+         text-transform: uppercase;
+         font-weight: bold;
+         letter-spacing: 1px;
+       }
+
+     .article-content h4 {
+         margin: 10px 0;
+         color: white;
+       }
+
+     .article-content p {
+         font-size: 0.85rem;
+         color: #888;
+         line-height: 1.5;
+       }
+
+     .btn-read {
+         margin-top: 15px;
+         background: transparent;
+         border: 1px solid #333;
+         color: var(--light-purple);
+         padding: 8px 15px;
+         border-radius: 8px;
+         cursor: pointer;
+         font-size: 0.8rem;
+         transition: 0.3s;
+       }
+
+     .btn-read:hover {
+         background: #1a1a1a;
+         border-color: var(--main-purple);
+       }
+
+       /* --- ABA DE ASSINATURAS --- */
+     .plans-grid {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+         gap: 25px;
+         margin-top: 30px;
+        }
+
+     .plan-card {
+         background: var(--gray-card);
+         border: 1px solid #222;
+         border-radius: 25px;
+         padding: 40px 30px;
+         text-align: center;
+         transition: 0.3s;
+         position: relative;
+         display: flex;
+         flex-direction: column;
+       }
+
+     .plan-card.popular {
+         border-color: var(--main-purple);
+         transform: scale(1.05);
+         box-shadow: 0 10px 30px rgba(123, 44, 191, 0.2);
+       }
+
+     .popular-badge {
+         position: absolute;
+         top: -15px;
+         left: 50%;
+         transform: translateX(-50%);
+         background: var(--main-purple);
+         color: white;
+         padding: 5px 15px;
+         border-radius: 20px;
+         font-size: 0.7rem;
+         font-weight: bold;
+       }
+
+     .plan-price {
+         font-size: 2.5rem;
+         font-weight: bold;
+         margin: 20px 0;
+       }
+
+     .plan-price span {
+         font-size: 1rem;
+         color: #888;
+       }
+
+     .plan-features {
+         list-style: none;
+         margin: 20px 0;
+         flex-grow: 1;
+         text-align: left;
+       }
+
+     .plan-features li {
+         font-size: 0.9rem;
+         color: #ccc;
+         margin-bottom: 12px;
+       }
+
+     .plan-features i {
+         color: var(--light-purple);
+         margin-right: 10px;
+       }
+
+     .btn-subscribe {
+         width: 100%;
+         background: var(--main-purple);
+         color: white;
+         border: none;
+         padding: 15px;
+         border-radius: 12px;
+         font-weight: bold;
+         cursor: pointer;
+         transition: 0.3s;
+       }
+
+     .btn-subscribe:hover {
+         background: var(--light-purple);
+       }
+
+     .btn-student {
+         background: transparent;
+         border: 1px solid #333;
+       }
+
+       /* --- ABA DE FÓRUM --- */
+      .forum-container {
+         max-width: 900px;
+         margin: 0 auto;
+       }
+
+      .post-card {
+         background: var(--gray-card);
+         border: 1px solid #222;
+         border-radius: 15px;
+         padding: 20px;
+         margin-bottom: 20px;
+         transition: 0.3s;
+       }
+
+     .post-header {
+         display: flex;
+         align-items: center;
+         gap: 12px;
+         margin-bottom: 15px;
+       }
+
+     .user-avatar-small {
+         width: 35px;
+         height: 35px;
+         background: var(--deep-purple);
+         border-radius: 50%;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         font-size: 0.8rem;
+         color: var(--light-purple);
+         font-weight: bold;
+        }
+
+     .post-tag {
+         font-size: 0.65rem;
+         padding: 3px 10px;
+         border-radius: 10px;
+         background: #222;
+         color: #888;
+         text-transform: uppercase;
+       }
+
+     .post-content {
+         font-size: 0.95rem;
+         line-height: 1.6;
+         color: #ddd;
+         margin-bottom: 15px;
+        }
+
+     .post-footer {
+         display: flex;
+         gap: 20px;
+         border-top: 1px solid #222;
+         padding-top: 15px;
+       }
+
+     .action-btn {
+         background: transparent;
+         border: none;
+         color: #666;
+         cursor: pointer;
+         font-size: 0.85rem;
+         transition: 0.3s;
+       }
+
+     .action-btn:hover { color: var(--light-purple); }
+
+     .new-post-box {
+         background: #0a0a0a;
+         border: 1px dashed var(--main-purple);
+         padding: 20px;
+         border-radius: 15px;
+         margin-bottom: 30px;
+       }
+
+    </style>
+</head>
+<body id="app-body">
+
+    <section id="splash-screen">
+        <div class="logo-container">
+            <h1>MindHelp</h1>
+            <p>CONECTANDO VOCÊ AO SEU BEM-ESTAR</p>
+        </div>
+        <button class="btn-start" onclick="startExperience()">ENTRAR NO ESPAÇO</button>
+    </section>
+
+    <div id="main-app" class="app-container">
+        <aside>
+            <h2 style="color: var(--main-purple); margin-bottom: 40px; text-align: center;">MINDHELP</h2>
+            <div class="nav-link active" onclick="showTab('inicio', this)"><i class="fas fa-home"></i> Início</div>
+            
+            <div class="nav-link" onclick="showTab('planos', this)" style="color: var(--light-purple);">
+             <i class="fas fa-star"></i> Premium
+          </div>
+         
+          <div class="nav-link" onclick="showTab('forum', this)">
+             <i class="fas fa-users"></i> Fórum
+          </div>
+           
+            <div class="nav-link" onclick="showTab('consultas', this)"><i class="fas fa-video"></i> Consultas</div>
+            <div class="nav-link" onclick="showTab('meditacao', this)"><i class="fas fa-spa"></i> Meditação</div>
+            <div class="nav-link" onclick="showTab('diario', this)"><i class="fas fa-book"></i> Diário</div>
+            <div class="nav-link" onclick="showTab('habitos', this)"><i class="fas fa-calendar-check"></i> Hábitos</div>
+            <div class="nav-link" onclick="showTab('biblioteca', this)"><i class="fas fa-book-open"></i> Biblioteca</div>
+            <div class="nav-link" onclick="showTab('ajuda', this)"><i class="fas fa-headset"></i> Suporte</div>
+            <a class="btn-sos" onclick="triggerSOS()">🚨 EMERGÊNCIA</a>
+        </aside>
+
+        <main>
+    <section id="inicio" class="tab-content active">
+       <h2 style="margin-bottom: 25px;">Espaço de Acolhimento</h2>
+    
+       <div class="dashboard-grid">
+         <div class="card">
+            <div class="breath-container">
+                <h3>Respiração Guiada</h3>
+                <div id="timer-display">00:00</div>
+                <div id="circle" class="breath-circle">Pronto?</div>
+                <div class="controls-row">
+                    <button id="btn-toggle" class="btn-control" onclick="toggleBreathing()">Iniciar</button>
+                    <button class="btn-control" style="border-color: #444;" onclick="resetExercise()">Resetar</button>
+                </div>
+                <div class="breath-controls">
+                    <p style="font-size: 0.75rem; color: #888;">Velocidade: <span id="speed-val">4</span>s</p>
+                    <input type="range" id="speed-slider" min="2" max="10" value="4">
+                </div>
+            </div>
+        </div>
+
+        <div class="card quote-card">
+            <h3>Pílula de Motivação</h3>
+            <p id="quote-text">"Sua jornada vale a pena."</p>
+            <button class="btn-control" onclick="generateQuote()">Nova Frase</button>
+        </div>
+
+        <div class="card">
+            <h3>Conteúdo para Você</h3>
+            <div class="video-grid">
+                <a href="https://www.youtube.com/watch?v=zpQOCJVuF50&t=157s" target="_blank" class="video-item">
+                    <i class="fab fa-youtube"></i>
+                    <div>
+                        <p style="font-size: 0.85rem; font-weight: bold;">Como aliviar o estresse do dia a dia</p>
+                        <small style="color: #666;">Canal: Drauzio Varella</small>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/watch?v=mzAqzL2XIQA" target="_blank" class="video-item">
+                    <i class="fab fa-youtube"></i>
+                    <div>
+                        <p style="font-size: 0.85rem; font-weight: bold;">Meditação para ANSIEDADE</p>
+                        <small style="color: #666;">Canal: Raissa Zoccal</small>
+                    </div>
+                </a>
+            </div>
+        </div>
+    <div class="card">
+            <h3 style="color: var(--light-purple);"><i class="fas fa-heartbeat"></i> Como você está?</h3>
+            <div class="mood-selector">
+                <button class="mood-btn" onclick="setMood('happy', this)">😊</button>
+                <button class="mood-btn" onclick="setMood('calm', this)">😌</button>
+                <button class="mood-btn" onclick="setMood('tired', this)">😴</button>
+                <button class="mood-btn" onclick="setMood('sad', this)">😔</button>
+                <button class="mood-btn" onclick="setMood('anxious', this)">😰</button>
+            </div>
+            <p id="mood-feedback" style="text-align: center; font-size: 0.8rem; color: var(--light-purple); min-height: 1.2rem;"></p>
+        </div>
+
+        <div class="card">
+            <h3 style="color: var(--light-purple);"><i class="fas fa-clipboard-check"></i> Checklist Diário</h3>
+            <div class="task-list">
+                <label class="task-item">
+                    <input type="checkbox"> <span>Beber água</span>
+                </label>
+                <label class="task-item">
+                    <input type="checkbox"> <span>5 min de respiração</span>
+                </label>
+                <label class="task-item">
+                    <input type="checkbox"> <span>Agradecer por algo</span>
+                </label>
+            </div>
+        </div>    
+    </div>
+ </section>
+
+            <section id="diario" class="tab-content">
+                <h2>Meu Diário</h2>
+                <div class="card">
+                    <textarea id="diary-input" rows="4" style="width: 100%; background: #000; color: white; border: 1px solid #333; padding: 10px; border-radius: 10px;" placeholder="Como foi seu dia?"></textarea>
+                    <button class="btn-control" style="margin-top: 10px;" onclick="saveNote()">Salvar Entrada</button>
+                </div>
+                <div id="diary-notes-container"></div>
+            </section>
+
+            <section id="ajuda" class="tab-content">
+                <h2>Suporte Técnico</h2>
+                <div class="card">
+                    <div id="chat-container">
+                        <div id="chat-messages"><div class="msg bot">Olá! Como podemos ajudar você hoje?</div></div>
+                        <div class="chat-input-area">
+                            <input type="text" id="chat-input" placeholder="Sua mensagem...">
+                            <button class="btn-send" onclick="sendSupportMsg()"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+           <section id="meditacao" class="tab-content">
+             <div style="margin-bottom: 25px;">
+                 <h2>Meditação e Sons Relaxantes</h2>
+                 <p style="color: #888;">Som ambiente real para acalmar sua mente.</p>
+              </div>
+
+             <div class="meditation-grid">
+                 <div class="sound-card" onclick="playAudio('Chuva', 'audio/chuva.mp3')">
+                     <i class="fas fa-cloud-showers-heavy"></i>
+                     <h4>Chuva</h4>
+                     <p style="font-size: 0.7rem; color: #666;">Som local</p>
+                 </div>
+             
+                 <div class="sound-card" onclick="playAudio('Oceano', 'audio/oceano.mp3')">
+                     <i class="fas fa-water"></i>
+                     <h4>Oceano</h4>
+                     <p style="font-size: 0.7rem; color: #666;">Som local</p>
+                 </div>
+            
+                 <div class="sound-card" onclick="playAudio('Floresta', 'audio/floresta.mp3')">
+                     <i class="fas fa-leaf"></i>
+                     <h4>Floresta</h4>
+                     <p style="font-size: 0.7rem; color: #666;">Som local</p>
+                 </div>
+             
+                 <div class="sound-card" onclick="playAudio('Vento', 'audio/vento.mp3')">
+                     <i class="fas fa-wind"></i>
+                     <h4>Vento</h4>
+                     <p style="font-size: 0.7rem; color: #666;">Som local</p>
+                 </div>
+             </div>
+
+             <div id="mini-player" class="player-footer">
+                 <div class="player-controls">
+                     <div id="track-name">Pronto para relaxar</div>
+                     <button class="btn-control" style="padding: 5px 12px; border-color: var(--emergency);" onclick="stopAudio()">Parar</button>
+                 </div>
+             </div>
+          </section>
+
+         <section id="forum" class="tab-content">
+             <div class="forum-container">
+                 <div style="margin-bottom: 25px;">
+                     <h2>Comunidade MindHelp</h2>
+                     <p style="color: #888;">Um espaço seguro para compartilhar e apoiar.</p>
+                 </div>
+        
+                 <div class="new-post-box">
+                     <textarea id="post-input" rows="2"
+                         style="width: 100%; background: transparent; border: none; color: white; outline: none; resize: none;"
+                         placeholder="Compartilhe algo positivo hoje..."></textarea>
+                     <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                         <button class="btn-control" onclick="createPost()">Publicar</button>
+                     </div>
+                 </div>
+        
+                 <div id="forum-feed">
+                     <div class="post-card">
+                         <div class="post-header">
+                             <div class="user-avatar-small">AM</div>
+                             <div>
+                                 <span style="font-weight: bold; font-size: 0.9rem;">Ana Maria</span>
+                                 <span class="post-tag">Superação</span>
+                             </div>
+                         </div>
+                         <p class="post-content">Hoje completei 10 dias seguidos de meditação! Me sinto muito mais focada e menos ansiosa. Não desistam!</p>
+                         <div class="post-footer">
+                             <button class="action-btn"><i class="far fa-heart"></i> 24</button>
+                             <button class="action-btn"><i class="far fa-comment"></i> 5 comentários</button>
+                         </div>
+                     </div>
+        
+                     <div class="post-card">
+                         <div class="post-header">
+                             <div class="user-avatar-small">JP</div>
+                             <div>
+                                 <span style="font-weight: bold; font-size: 0.9rem;">João Pedro</span>
+                                 <span class="post-tag">Dica</span>
+                             </div>
+                         </div>
+                         <p class="post-content">Alguém tem alguma dica de como manter a calma em reuniões de trabalho muito tensas?</p>
+                         <div class="post-footer">
+                             <button class="action-btn"><i class="far fa-heart"></i> 12</button>
+                             <button class="action-btn"><i class="far fa-comment"></i> Responder</button>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </section>
+
+            <section id="consultas" class="tab-content">
+             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                 <h2>Agendar Vídeo Chamada</h2>
+                 <small style="color: #666;"><i class="fas fa-lock"></i> Ambiente Seguro e Sigiloso</small>
+             </div>
+
+             <div class="expert-grid">
+                 <div class="expert-card">
+                     <div class="expert-avatar"><i class="fas fa-user-md"></i></div>
+                     <span class="specialty-tag">Ansiedade e Pânico</span>
+                     <h4 style="margin-bottom: 5px;">Dr. Ricardo Silva</h4>
+                     <p style="font-size: 0.8rem; color: #888; margin-bottom: 15px;">Psicólogo Clínico - CRP 06/12345</p>
+                     <button class="btn-schedule" onclick="openBooking('Dr. Ricardo')">Ver Horários</button>
+                </div>
+
+                <div class="expert-card">
+                     <div class="expert-avatar"><i class="fas fa-brain"></i></div>
+                     <span class="specialty-tag">Terapia Cognitiva</span>
+                     <h4 style="margin-bottom: 5px;">Dra. Mariana Costa</h4>
+                     <p style="font-size: 0.8rem; color: #888; margin-bottom: 15px;">Especialista em TCC - CRP 05/67890</p>
+                     <button class="btn-schedule" onclick="openBooking('Dra. Mariana')">Ver Horários</button>
+                </div>
+
+                <div class="expert-card">
+                     <div class="expert-avatar"><i class="fas fa-child"></i></div>
+                     <span class="specialty-tag">Conflitos Familiares</span>
+                     <h4 style="margin-bottom: 5px;">Dr. Lucas Mendes</h4>
+                     <p style="font-size: 0.8rem; color: #888; margin-bottom: 15px;">Terapeuta Familiar - CRP 04/54321</p>
+                     <button class="btn-schedule" onclick="openBooking('Dr. Lucas')">Ver Horários</button>
+                   </div>
+               </div>
+           </section>
+
+           <section id="habitos" class="tab-content">
+             <div class="habit-container">
+                 <div style="margin-bottom: 30px;">
+                     <h2>Jornada de Hábitos</h2>
+                     <p style="color: #666;">Pequenas vitórias diárias levam a grandes mudanças.</p>
+                  </div>
+
+                 <div class="habit-card">
+                     <div class="habit-info">
+                         <h4>Meditação Diária</h4>
+                         <p style="font-size: 0.8rem; color: #888;">Meta: 7 dias seguidos</p>
+                         <div class="habit-progress-bg">
+                             <div id="progress-meditation" class="habit-progress-fill"></div>
+                         </div>
+                     </div>
+                     <div class="habit-action">
+                         <button class="btn-habit" onclick="completeHabit('meditation')">Concluir Hoje</button>
+                         <span id="streak-meditation" class="streak-badge">Sequência: 0 dias</span>
+                       </div>
+                 </div>
+
+                 <div class="habit-card">
+                     <div class="habit-info">
+                         <h4>Hidratação</h4>
+                         <p style="font-size: 0.8rem; color: #888;">Meta: Beber 2L de água</p>
+                         <div class="habit-progress-bg">
+                             <div id="progress-water" class="habit-progress-fill"></div>
+                         </div>
+                     </div>
+                     <div class="habit-action">
+                         <button class="btn-habit" onclick="completeHabit('water')">Concluir Hoje</button>
+                         <span id="streak-water" class="streak-badge">Sequência: 0 dias</span>
+                      </div>
+                 </div>
+        
+                 <button class="btn-control" style="margin-top: 20px; opacity: 0.6;" onclick="resetHabits()">Resetar Progresso</button>
+              </div>
+          </section>
+
+          <section id="biblioteca" class="tab-content">
+             <div style="margin-bottom: 30px;">
+                 <h2>Biblioteca de Bem-Estar</h2>
+                 <p style="color: #666;">Conhecimento é o primeiro passo para o equilíbrio.</p>
+              </div>
+
+             <div class="library-grid">
+                 <div class="article-card">
+                     <div class="article-img"><i class="fas fa-brain"></i></div>
+                     <div class="article-content">
+                         <span class="article-tag">Ansiedade</span>
+                         <h4>Entendendo a Ansiedade</h4>
+                         <p>A ansiedade é uma resposta natural do corpo, mas quando se torna constante, precisamos de estratégias...</p>
+                         <button class="btn-read" onclick="openArticle('Ansiedade')">Ler Artigo</button>
+                     </div>
+                  </div>
+
+                 <div class="article-card">
+                     <div class="article-img"><i class="fas fa-moon"></i></div>
+                     <div class="article-content">
+                         <span class="article-tag">Sono</span>
+                         <h4>Higiene do Sono</h4>
+                         <p>Dicas práticas para preparar seu ambiente e sua mente para um descanso realmente reparador.</p>
+                         <button class="btn-read" onclick="openArticle('Sono')">Ler Artigo</button>
+                     </div>
+                  </div>
+
+                 <div class="article-card">
+                     <div class="article-img"><i class="fas fa-feather"></i></div>
+                     <div class="article-content">
+                         <span class="article-tag">Autoestima</span>
+                         <h4>O Poder do Autocuidado</h4>
+                         <p>Cuidar de si não é egoísmo. Entenda como pequenas pausas melhoram sua saúde mental.</p>
+                         <button class="btn-read" onclick="openArticle('Autocuidado')">Ler Artigo</button>
+                      </div>
+                  </div>
+              </div>
+          </section>
+
+         <section id="planos" class="tab-content">
+             <div style="text-align: center; margin-bottom: 40px;">
+                 <h2>Sua mente merece o melhor</h2>
+                 <p style="color: #888;">Escolha o plano ideal para manter seu equilíbrio.</p>
+              </div>
+        
+             <div class="plans-grid">
+                 <div class="plan-card">
+                     <h3 style="color: #888;">Estudante</h3>
+                     <div class="plan-price">R$ 9,90<span>/mês</span></div>
+                     <ul class="plan-features">
+                         <li><i class="fas fa-check"></i> Conteúdo Acadêmico</li>
+                         <li><i class="fas fa-check"></i> Diário Ilimitado</li>
+                         <li><i class="fas fa-check"></i> Sons de Natureza</li>
+                      </ul>
+                     <button class="btn-subscribe" style="background: #333;" onclick="subscribe('Estudante')">Validar Instituição</button>
+                  </div>
+        
+                 <div class="plan-card popular">
+                     <div class="popular-badge">MELHOR VALOR</div>
+                     <h3 style="color: var(--light-purple);">Plano Anual</h3>
+                     <div class="plan-price">R$ 19,90<span>/mês</span></div>
+                     <ul class="plan-features">
+                         <li><i class="fas fa-check"></i> Tudo do plano mensal</li>
+                         <li><i class="fas fa-check"></i> 1ª Consulta Grátis</li>
+                         <li><i class="fas fa-check"></i> Suporte Prioritário 24h</li>
+                         <li><i class="fas fa-check"></i> Acesso Offline</li>
+                       </ul>
+                     <button class="btn-subscribe" onclick="subscribe('Anual')">Assinar Agora</button>
+                  </div>
+        
+                 <div class="plan-card">
+                     <h3>Mensal</h3>
+                     <div class="plan-price">R$ 29,90<span>/mês</span></div>
+                     <ul class="plan-features">
+                         <li><i class="fas fa-check"></i> Meditações Exclusivas</li>
+                         <li><i class="fas fa-check"></i> Relatórios de Humor</li>
+                         <li><i class="fas fa-check"></i> Sem fidelidade</li>
+                      </ul>
+                     <button class="btn-subscribe" onclick="subscribe('Mensal')">Começar Plano</button>
+                   </div>
+              </div>
+          </section>
+        </main>
+    </div>
+
+    <script>
+        // --- INICIALIZAÇÃO ---
+        window.onload = () => { 
+            loadNotes(); 
+            startBreathing(); 
+        };
+
+        function startExperience() {
+            document.getElementById('splash-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('splash-screen').style.display = 'none';
+                const app = document.getElementById('main-app');
+                app.style.display = 'flex';
+                setTimeout(() => { app.style.opacity = '1'; }, 50);
+            }, 600);
+        }
+
+        function showTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+        }
+
+        // --- VARIÁVEIS DE CONTROLE ---
+        let isBreathingActive = false;
+        let isInhaling = true;
+        let breathTimeout;
+        let timerInterval;
+        let totalSeconds = 0;
+
+        const circle = document.getElementById('circle');
+        const breathText = document.getElementById('breath-text');
+        const speedSlider = document.getElementById('speed-slider');
+        const speedVal = document.getElementById('speed-val');
+        const btnToggle = document.getElementById('btn-toggle');
+        const timerDisplay = document.getElementById('timer-display');
+
+        // --- FUNÇÕES DE RESPIRAÇÃO E CRONÔMETRO ---
+        function toggleBreathing() {
+          isBreathingActive = !isBreathingActive;
+    
+         if (isBreathingActive) {
+             btnToggle.innerText = "Pausar";
+             timerInterval = setInterval(updateTimer, 1000);
+         runBreathCycle(); // Inicia o ciclo
+         } else {
+             btnToggle.innerText = "Retomar";
+             clearInterval(timerInterval);
+             clearTimeout(breathTimeout);
+             circle.style.transform = 'scale(1)';
+             circle.innerText = "Pausado";
+            }
+       }
+
+       function runBreathCycle() {
+         if (!isBreathingActive) return;
+
+         const duration = speedSlider.value * 1000;
+         speedVal.innerText = speedSlider.value;
+          // Aplica a transição suave
+         circle.style.transition = `transform ${duration}ms ease-in-out`;
+
+         if (isInhaling) {
+             circle.style.transform = 'scale(1.4)';
+             circle.innerText = "Inspire";
+           } else {
+             circle.style.transform = 'scale(1.0)';
+             circle.innerText = "Expire";
+            }
+
+         // ALTERNA O ESTADO: Se era true, vira false. Se era false, vira true.
+         isInhaling = !isInhaling;
+
+         // Agenda a próxima fase do ciclo baseado no tempo escolhido
+         breathTimeout = setTimeout(runBreathCycle, duration);
+        }
+
+        function updateTimer() {
+            totalSeconds++;
+            const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+            const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+            timerDisplay.innerText = `${minutes}:${seconds}`;
+        }
+
+        function resetExercise() {
+            isBreathingActive = false;
+            clearInterval(timerInterval);
+            clearTimeout(breathTimeout);
+            totalSeconds = 0;
+            isInhaling = true;
+            
+            timerDisplay.innerText = "00:00";
+            btnToggle.innerText = "Iniciar";
+            circle.style.transform = 'scale(1)';
+            circle.innerText = "Pronto?";
+            breathText.innerText = "Encontre seu ritmo";
+        }
+
+        speedSlider.oninput = function() {
+            speedVal.innerText = this.value;
+        };
+
+        // --- SISTEMA DE FRASES ---
+        const quotes = [
+         "Respire fundo. É apenas um dia ruim, não uma vida ruim.",
+         "Você é mais forte do que imagina e mais capaz do que acredita.",
+         "O melhor ainda está por vir.",
+         "Sua saúde mental é uma prioridade. Sua felicidade é essencial.",
+         "Não importa a lentidão com que você vá, desde que não pare.",
+         "Grandes batalhas são dadas a grandes guerreiros.",
+         "Um passo de cada vez. Hoje você fez o seu melhor.",
+         "Sua jornada vale a pena, continue firme.",
+         "Cultive pensamentos bons e a vida florescerá."
+       ];
+
+       function generateQuote() {
+         const textElement = document.getElementById('quote-text');
+         const randomIndex = Math.floor(Math.random() * quotes.length);
+
+         textElement.style.opacity = 0; // Efeito visual
+         setTimeout(() => {
+             textElement.innerText = `"${quotes[randomIndex]}"`;
+             textElement.style.opacity = 1;
+        }, 200);
+        }
+        
+        // --- LOGICA DO RASTREADOR DE HUMOR ---
+        function setMood(mood, element) {
+         // Remove destaque dos outros emojis
+         document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('active'));
+    
+         // Destaca o selecionado
+         element.classList.add('active');
+    
+         const feedback = document.getElementById('mood-feedback');
+         const msgs = {
+             happy: "Que bom! Espalhe essa energia positiva. ✨",
+             calm: "Aproveite esse momento de paz. 🌿",
+             tired: "Respeite seu corpo, descansar também é produtivo. 🔋",
+             sad: "Tudo bem não estar bem. Respire fundo. ❤️",
+             anxious: "Foque no agora. Você está em segurança. ⚓"
+            };
+    
+         feedback.style.opacity = 0;
+         setTimeout(() => {
+             feedback.innerText = msgs[mood];
+             feedback.style.opacity = 1;
+            }, 200);
+        }
+        
+        // --- SISTEMA DE ABAS ---
+        function showTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+        }
+
+        // --- DIÁRIO ---
+        function saveNote() {
+            const input = document.getElementById('diary-input');
+            if (!input.value.trim()) return;
+            const notes = JSON.parse(localStorage.getItem('mindhelp_notes') || '[]');
+            notes.unshift({ id: Date.now(), text: input.value, date: new Date().toLocaleDateString() });
+            localStorage.setItem('mindhelp_notes', JSON.stringify(notes));
+            input.value = "";
+            loadNotes();
+        }
+       
+        // --- FÓRUM ---
+        function createPost() {
+         const input = document.getElementById('post-input');
+         const feed = document.getElementById('forum-feed');
+    
+         if (input.value.trim() === "") {
+             alert("Escreva algo antes de publicar!");
+             return;
+           }
+
+         const newPost = document.createElement('div');
+         newPost.className = 'post-card';
+         newPost.innerHTML = `
+             <div class="post-header">
+                 <div class="user-avatar-small" style="background: var(--main-purple); color: white;">VC</div>
+                 <div>
+                     <span style="font-weight: bold; font-size: 0.9rem;">Você</span>
+                     <span class="post-tag">Novo</span>
+                 </div>
+             </div>
+             <p class="post-content">${input.value}</p>
+             <div class="post-footer">
+                 <button class="action-btn"><i class="far fa-heart"></i> 0</button>
+                 <button class="action-btn"><i class="far fa-comment"></i> Responder</button>
+              </div>
+           `;
+
+         feed.prepend(newPost); // Adiciona no topo
+         input.value = "";
+       }
+
+        function loadNotes() {
+          const container = document.getElementById('diary-notes-container');
+          const notes = JSON.parse(localStorage.getItem('mindhelp_notes') || '[]');
+    
+          container.innerHTML = notes.map(n => `
+             <div class="card" style="padding: 15px; border-left: 4px solid var(--main-purple); margin-top: 15px;">
+             <div class="diary-item">
+                <div>
+                    <small style="color: #666;">${n.date}</small>
+                    <p style="margin-top: 5px; color: white;">${n.text}</p>
+                </div>
+                <button class="btn-delete" onclick="deleteNote(${n.id})" title="Apagar nota">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>`).join('');
+        }
+
+        function deleteNote(id) {
+         if (confirm("Tem certeza que deseja apagar esta nota?")) {
+             let notes = JSON.parse(localStorage.getItem('mindhelp_notes') || '[]');
+        
+             // Remove a nota que tem o ID clicado
+             notes = notes.filter(note => note.id !== id);
+        
+             // Salva a nova lista sem a nota apagada
+             localStorage.setItem('mindhelp_notes', JSON.stringify(notes));
+        
+             // Atualiza a tela imediatamente
+             loadNotes();
+            }
+       }
+
+        // --- SUPORTE ---
+        function sendSupportMsg() {
+            const input = document.getElementById('chat-input');
+            if(!input.value) return;
+            const container = document.getElementById('chat-messages');
+            container.innerHTML += `<div class="msg user">${input.value}</div>`;
+            input.value = "";
+            setTimeout(() => {
+                container.innerHTML += `<div class="msg bot">Anotei sua dúvida! Em breve um humano entrará em contato.</div>`;
+                container.scrollTop = container.scrollHeight;
+            }, 1000);
+        }
+
+        // --- SISTEMA DE ÁUDIO AMBIENTE ---
+        let currentAudio = null;
+
+        function playAudio(name, url) {
+         console.log("Tentando tocar:", name, "do link:", url);
+         const player = document.getElementById('mini-player');
+         const trackName = document.getElementById('track-name');
+
+         // 1. Se já estiver tocando o MESMO áudio, ele para (Toggle)
+         if (currentAudio && currentAudio.src === url) {
+             if (!currentAudio.paused) {
+                 stopAudio();
+                 return;
+               }
+           }
+
+         // 2. Para e reseta qualquer áudio anterior
+         if (currentAudio) {
+             currentAudio.pause();
+             currentAudio.currentTime = 0;
+            }
+
+         // 3. Cria o novo objeto de áudio
+         currentAudio = new Audio(url);
+         currentAudio.loop = true;
+
+         // 4. Mostra o player e tenta tocar
+         player.style.display = 'block';
+         trackName.innerText = `Carregando: ${name}...`;
+
+         // O .play() retorna uma Promessa, precisamos tratar o erro de bloqueio do navegador
+         currentAudio.play()
+             .then(() => {
+                 trackName.innerText = `Tocando: ${name}`;
+               })
+             .catch(error => {
+                 console.error("Erro ao tocar áudio:", error);
+                 trackName.innerText = "Clique aqui para liberar o áudio";
+                 // Caso o navegador bloqueie, o usuário precisa clicar em algo na tela
+                 player.onclick = () => { currentAudio.play(); trackName.innerText = `Tocando: ${name}`; };
+            });
+       }
+
+       function stopAudio() {
+          if (currentAudio) {
+             currentAudio.pause();
+             currentAudio.src = ""; // Limpa o cache do áudio
+             currentAudio = null;
+           }
+         document.getElementById('mini-player').style.display = 'none';
+       }
+      
+       // --- ASSINATURA ---
+       function subscribe(planName) {
+         alert(`Redirecionando para o checkout seguro...\n\nVocê escolheu o plano: ${planName}.\n\n(Aqui integraria com Stripe, PayPal ou Mercado Pago).`);
+        }
+
+      // --- LOGICA DE TROCA DE ABAS (SHOWTAB) ---
+      function showTab(tabId, element) {
+         // Esconder todas as abas
+         document.querySelectorAll('.tab-content').forEach(tab => {
+             tab.classList.remove('active');
+           });
+    
+         // Remover classe ativa de todos os links
+         document.querySelectorAll('.nav-link').forEach(link => {
+             link.classList.remove('active');
+           });
+
+         // Mostrar a aba selecionada
+         document.getElementById(tabId).classList.add('active');
+         element.classList.add('active');
+
+         // Se sair da aba de meditação e não houver áudio tocando, esconde o player
+         if(tabId !== 'meditacao' && !currentAudio) {
+             document.getElementById('mini-player').style.display = 'none';
+           }
+       } 
+
+        function triggerSOS() {
+            if(confirm("Deseja abrir o chat do CVV?")) window.open('https://www.cvv.org.br/', '_blank');
+        }
+
+        function openBooking(professional) {
+          alert(`Conectando ao sistema de agendamento seguro para: ${professional}.\n\nEm um sistema real, aqui abriria um calendário integrado (como Google Calendar ou Calendly).`);
+        }
+
+        // Carregar hábitos ao iniciar
+        window.addEventListener('load', () => {
+         updateHabitUI();
+        });
+
+       function completeHabit(type) {
+         let habitData = JSON.parse(localStorage.getItem('mindhelp_habits')) || {
+             meditation: { streak: 0, lastDone: null },
+             water: { streak: 0, lastDone: null }
+           };
+
+         const today = new Date().toLocaleDateString();
+
+         if (habitData[type].lastDone === today) {
+             alert("Você já concluiu este hábito hoje! Descanse. ✨");
+             return;
+           }
+
+         // Incrementa a sequência
+         habitData[type].streak += 1;
+         habitData[type].lastDone = today;
+
+         localStorage.setItem('mindhelp_habits', JSON.stringify(habitData));
+         updateHabitUI();
+       }
+
+      function updateHabitUI() {
+         const habitData = JSON.parse(localStorage.getItem('mindhelp_habits')) || {
+             meditation: { streak: 0 },
+             water: { streak: 0 }
+           };
+
+         // Atualiza Meditação
+         const medStreak = habitData.meditation.streak;
+         document.getElementById('streak-meditation').innerText = `Sequência: ${medStreak} dias`;
+         document.getElementById('progress-meditation').style.width = `${Math.min(medStreak * 14.2, 100)}%`; // 14.2% por dia para fechar 100% em 7 dias
+
+         // Atualiza Água
+         const waterStreak = habitData.water.streak;
+         document.getElementById('streak-water').innerText = `Sequência: ${waterStreak} dias`;
+         document.getElementById('progress-water').style.width = `${Math.min(waterStreak * 14.2, 100)}%`;
+        }
+
+      function resetHabits() {
+         if(confirm("Deseja zerar seu progresso de hábitos?")) {
+             localStorage.removeItem('mindhelp_habits');
+             updateHabitUI();
+            }
+       }
+
+       function openArticle(topic) {
+         alert(`Você está abrindo o guia sobre ${topic}.\n\nEste espaço conteria textos informativos baseados em evidências científicas para ajudar no seu processo de autoconhecimento.`);
+        }
+
+        window.onload = () => { 
+         loadNotes(); 
+         generateQuote(); // Gera uma frase assim que o app abre
+        };
+    </script>
+</body>
+</html>
