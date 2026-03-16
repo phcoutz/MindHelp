@@ -468,6 +468,12 @@
          max-width: 800px;
         }
 
+       .sound-card.active {
+         border-color: var(--main-purple);
+         background: rgba(168, 85, 247, 0.1);
+         transform: scale(1.05);
+       }
+
        .habit-card {
          background: var(--gray-card);
          border: 1px solid #222;
@@ -1392,54 +1398,69 @@
 
         // --- SISTEMA DE ÁUDIO AMBIENTE ---
         let currentAudio = null;
+        let currentUrl = ""; // Variável para rastrear qual som está ativo
 
         function playAudio(name, url) {
-         console.log("Tentando tocar:", name, "do link:", url);
          const player = document.getElementById('mini-player');
          const trackName = document.getElementById('track-name');
 
-         // 1. Se já estiver tocando o MESMO áudio, ele para (Toggle)
-         if (currentAudio && currentAudio.src === url) {
-             if (!currentAudio.paused) {
-                 stopAudio();
-                 return;
-               }
+         // SE o áudio clicado for o mesmo que já está tocando: PARA TUDO
+         if (currentAudio && currentUrl === url) {
+             stopAudio();
+             return; // Sai da função e não toca nada
            }
 
-         // 2. Para e reseta qualquer áudio anterior
+         // Caso contrário, para o áudio anterior antes de tocar o novo
          if (currentAudio) {
              currentAudio.pause();
              currentAudio.currentTime = 0;
             }
 
-         // 3. Cria o novo objeto de áudio
+         // Configura o novo áudio
          currentAudio = new Audio(url);
          currentAudio.loop = true;
+         currentUrl = url; // Salva o link do áudio atual
 
-         // 4. Mostra o player e tenta tocar
          player.style.display = 'block';
-         trackName.innerText = `Carregando: ${name}...`;
+         trackName.innerText = "Tocando: " + name;
 
-         // O .play() retorna uma Promessa, precisamos tratar o erro de bloqueio do navegador
-         currentAudio.play()
-             .then(() => {
-                 trackName.innerText = `Tocando: ${name}`;
-               })
-             .catch(error => {
-                 console.error("Erro ao tocar áudio:", error);
-                 trackName.innerText = "Clique aqui para liberar o áudio";
-                 // Caso o navegador bloqueie, o usuário precisa clicar em algo na tela
-                 player.onclick = () => { currentAudio.play(); trackName.innerText = `Tocando: ${name}`; };
-            });
+         currentAudio.play().catch(e => console.log("Erro ao tocar:", e));
+    
+         // Opcional: Adiciona uma classe visual para mostrar que o card está ativo
+         updateActiveCard(url);
        }
 
        function stopAudio() {
-          if (currentAudio) {
+         if (currentAudio) {
              currentAudio.pause();
-             currentAudio.src = ""; // Limpa o cache do áudio
              currentAudio = null;
+             currentUrl = ""; // Reseta a URL ativa
            }
          document.getElementById('mini-player').style.display = 'none';
+       }
+
+       function updateActiveCard(url) {
+         // Remove a classe 'active' de todos os cards
+         document.querySelectorAll('.sound-card').forEach(card => {
+             card.classList.remove('active');
+        
+             // Se o atributo onclick do card contiver a URL atual, marca como ativo
+             if (card.getAttribute('onclick').includes(url)) {
+                 card.classList.add('active');
+               }
+          });
+       }
+
+      // Lembre-se de limpar os cards quando parar o som
+       function stopAudio() {
+         if (currentAudio) {
+             currentAudio.pause();
+             currentAudio = null;
+             currentUrl = "";
+           }
+         document.getElementById('mini-player').style.display = 'none';
+         // Remove o destaque de todos os cards
+         document.querySelectorAll('.sound-card').forEach(c => c.classList.remove('active'));
        }
       
        // --- ASSINATURA ---
