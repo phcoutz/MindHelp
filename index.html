@@ -605,6 +605,115 @@
          border-color: var(--main-purple);
        }
 
+       /* --- AGENDA --- */
+       .agenda-wrapper {
+         display: grid;
+         grid-template-columns: 1fr 1fr;
+         gap: 30px;
+         background: #1e1e1e;
+         padding: 25px;
+         border-radius: 15px;
+         box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+       .input-group {
+         margin-bottom: 15px;
+         display: flex;
+         flex-direction: column;
+       }
+
+       .input-group label { margin-bottom: 8px; color: #a855f7; font-weight: bold; }
+
+       .input-group input, .input-group select {
+         padding: 12px;
+         border-radius: 8px;
+         border: 1px solid #333;
+         background: #2d2d2d;
+         color: white;
+        }
+
+      .appointment-item {
+         background: #2d2d2d;
+         padding: 15px;
+         border-radius: 10px;
+         margin-bottom: 10px;
+         border-left: 4px solid #a855f7;
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+       }
+
+      .btn-delete {
+         background: #ef4444;
+         color: white;
+         border: none;
+         padding: 5px 10px;
+         border-radius: 5px;
+         cursor: pointer;
+       }
+
+       @media (max-width: 768px) { .agenda-wrapper { grid-template-columns: 1fr; } }
+
+       /* --- VIDEOCHAMADA --- */
+      .video-call-container {
+         background: #1e1e1e;
+         padding: 20px;
+         border-radius: 15px;
+         margin-top: 20px;
+         border: 1px solid #333;
+         text-align: center;
+        }
+
+      .video-preview {
+         position: relative;
+         width: 100%;
+         height: 200px;
+         border-radius: 12px;
+         overflow: hidden;
+         background: #000;
+         margin: 15px 0;
+       }
+
+      .video-preview img {
+         width: 100%;
+         height: 100%;
+         object-fit: cover;
+         opacity: 0.6; /* Efeito de espera */
+       }
+
+      .video-overlay {
+         position: absolute;
+         top: 50%;
+         left: 50%;
+         transform: translate(-50%, -50%);
+         z-index: 2;
+         color: white;
+       }
+
+      .status-online {
+         background: #22c55e;
+         padding: 4px 10px;
+         border-radius: 20px;
+         font-size: 0.7rem;
+         font-weight: bold;
+       }
+
+      .btn-video {
+         background: #22c55e;
+         color: white;
+         border: none;
+         padding: 12px 25px;
+         border-radius: 30px;
+         font-weight: bold;
+         cursor: pointer;
+         transition: 0.3s;
+       }
+
+      .btn-video:hover {
+         background: #16a34a;
+         transform: translateY(-2px);
+        }
+
        /* --- ABA DE ASSINATURAS --- */
      .plans-grid {
          display: grid;
@@ -631,17 +740,35 @@
          box-shadow: 0 10px 30px rgba(123, 44, 191, 0.2);
        }
 
-     .popular-badge {
+     .badge {
          position: absolute;
-         top: -15px;
+         top: -15px;            /* Faz o badge "flutuar" para fora do card */
          left: 50%;
          transform: translateX(-50%);
-         background: var(--main-purple);
+         background: linear-gradient(135deg, #a855f7, #7c3aed); /* Gradiente roxo vibrante */
          color: white;
-         padding: 5px 15px;
+         padding: 6px 20px;
          border-radius: 20px;
-         font-size: 0.7rem;
+         font-size: 0.75rem;
          font-weight: bold;
+         text-transform: uppercase;
+         letter-spacing: 1px;
+         box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+         z-index: 10;
+         animation: pulse 2s infinite; /* Efeito de atenção discreto */
+       }
+
+     /* Animação para o badge não ficar estático */
+     @keyframes pulse {
+         0% { transform: translateX(-50%) scale(1); }
+         50% { transform: translateX(-50%) scale(1.05); }
+         100% { transform: translateX(-50%) scale(1); }
+       }
+
+     /* Deixa o card do plano anual ainda mais destacado */
+     .plan-card.featured {
+         border: 2px solid #a855f7;
+         box-shadow: 0 10px 30px rgba(168, 85, 247, 0.15);
        }
 
      .plan-price {
@@ -692,6 +819,21 @@
      .btn-student {
          background: transparent;
          border: 1px solid #333;
+       }
+
+     .total-price-hint {
+         font-size: 0.85rem;
+         color: #a1a1a1;    /* Um cinza claro que combina com o roxo */
+         margin: 5px 0 15px 0; /* Espaço equilibrado em cima e embaixo */
+         display: block;    /* Garante que ele fique em uma linha própria */
+         font-weight: 400;
+       }
+
+     /* Opcional: destaque leve no plano anual para ajudar na venda */
+     .plan-card.featured {
+         border: 2px solid var(--main-purple);
+         position: relative;
+         transform: scale(1.05); /* Deixa o plano anual levemente maior */
        }
 
        /* --- ABA DE FÓRUM --- */
@@ -1023,6 +1165,47 @@
                      <button class="btn-schedule" onclick="openBooking('Dr. Lucas')">Ver Horários</button>
                    </div>
                </div>
+
+                <div class="agenda-wrapper">
+                     <div class="appointment-form">
+                         <h3>Agendar Novo Horário</h3>
+                         <div class="input-group">
+                             <label>Especialista</label>
+                             <select id="doc-select">
+                                 <option value="Dr. Ricardo (Psicólogo)">Dr. Ricardo (Psicólogo)</option>
+                                 <option value="Dra. Mariana (Especialista TCC)">Dra. Mariana (Especialista TCC)</option>
+                                 <option value="Dr. Lucas (Terapeuta)">Dr. Lucas (Terapeuta)</option>
+                             </select>
+                          </div>
+                         <div class="input-group">
+                             <label>Data e Hora</label>
+                             <input type="datetime-local" id="app-date">
+                          </div>
+                         <button class="btn-control" onclick="saveAppointment()">Confirmar Agendamento</button>
+                      </div>
+
+                     <div class="appointment-list">
+                         <h3>Próximas Consultas</h3>
+                         <div id="list-container">
+                 </div></div>
+             </div>
+
+             <div class="video-call-container">
+                 <h3><i class="fas fa-video"></i> Próxima Vídeo Chamada</h3>
+                 <div class="video-preview">
+                     <div class="video-overlay">
+                         <span class="status-online">● AO VIVO</span>
+                         <p>Aguardando você: <strong>Dra. Mariana</strong></p>
+                     </div>
+                     <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=500&q=80" alt="Psicóloga">
+                  </div>
+                 <div class="video-actions">
+                     <button class="btn-video" onclick="iniciarChamada()">
+                         <i class="fas fa-phone"></i> Entrar na Sala
+                     </button>
+                     <p class="small-text">Sua câmera será ativada ao entrar.</p>
+                  </div>
+              </div>
            </section>
 
            <section id="habitos" class="tab-content">
@@ -1121,18 +1304,21 @@
                      <button class="btn-subscribe" style="background: #333;" onclick="subscribe('Estudante')">Validar Instituição</button>
                   </div>
         
-                 <div class="plan-card popular">
-                     <div class="popular-badge">MELHOR VALOR</div>
-                     <h3 style="color: var(--light-purple);">Plano Anual</h3>
-                     <div class="plan-price">R$ 19,90<span>/mês</span></div>
+                 <div class="plan-card featured">
+                     <div class="badge">✨ Mais Popular</div> 
+                     <h3>Plano Anual</h3>
+                     <div class="price">
+                         R$ 19,90<span>/mês</span>
+                       </div>
+                     <p class="total-price-hint">R$ 238,80 cobrados anualmente</p>
+    
                      <ul class="plan-features">
-                         <li><i class="fas fa-check"></i> Tudo do plano mensal</li>
-                         <li><i class="fas fa-check"></i> 1ª Consulta Grátis</li>
-                         <li><i class="fas fa-check"></i> Suporte Prioritário 24h</li>
-                         <li><i class="fas fa-check"></i> Acesso Offline</li>
-                       </ul>
-                     <button class="btn-subscribe" onclick="subscribe('Anual')">Assinar Agora</button>
-                  </div>
+                         <li><i class="fas fa-check"></i> Acesso a todos os sons</li>
+                         <li><i class="fas fa-check"></i> Consultas ilimitadas</li>
+                         <li><i class="fas fa-check"></i> Modo Offline</li>
+                      </ul>
+                     <button class="btn-control" onclick="confirmarAssinatura('Anual')">Assinar Agora</button>
+                 </div>
         
                  <div class="plan-card">
                      <h3>Mensal</h3>
@@ -1140,7 +1326,7 @@
                      <ul class="plan-features">
                          <li><i class="fas fa-check"></i> Meditações Exclusivas</li>
                          <li><i class="fas fa-check"></i> Relatórios de Humor</li>
-                         <li><i class="fas fa-check"></i> Sem fidelidade</li>
+                         <li><i class="fas fa-check"></i> <b>Sem fidelidade</b> (cancele quando quiser)</li>
                       </ul>
                      <button class="btn-subscribe" onclick="subscribe('Mensal')">Começar Plano</button>
                    </div>
@@ -1274,6 +1460,60 @@
              textElement.innerText = `"${quotes[randomIndex]}"`;
              textElement.style.opacity = 1;
         }, 200);
+        }
+
+        // Carregar consultas ao abrir o site
+       document.addEventListener('DOMContentLoaded', displayAppointments);
+
+       function saveAppointment() {
+         const doc = document.getElementById('doc-select').value;
+         const date = document.getElementById('app-date').value;
+
+         if (!date) {
+             alert("Por favor, selecione uma data e hora.");
+             return;
+           }
+
+         const appointment = {
+             id: Date.now(),
+             doc: doc,
+             date: new Date(date).toLocaleString('pt-BR')
+           };
+
+         // Salvar no LocalStorage
+         let appointments = JSON.parse(localStorage.getItem('mindhelp_apps')) || [];
+         appointments.push(appointment);
+         localStorage.setItem('mindhelp_apps', JSON.stringify(appointments));
+
+         displayAppointments();
+         alert("Consulta agendada com sucesso!");
+       }
+
+      function displayAppointments() {
+         const container = document.getElementById('list-container');
+         const appointments = JSON.parse(localStorage.getItem('mindhelp_apps')) || [];
+
+         if (appointments.length === 0) {
+             container.innerHTML = "<p style='color: #666;'>Nenhuma consulta marcada.</p>";
+             return;
+           }
+
+         container.innerHTML = appointments.map(app => `
+             <div class="appointment-item">
+                 <div>
+                     <strong>${app.doc}</strong><br>
+                     <small>${app.date}</small>
+                  </div>
+                  <button class="btn-delete" onclick="deleteApp(${app.id})">Excluir</button>
+              </div>
+         `).join('');
+        }
+
+      function deleteApp(id) {
+         let appointments = JSON.parse(localStorage.getItem('mindhelp_apps'));
+         appointments = appointments.filter(app => app.id !== id);
+         localStorage.setItem('mindhelp_apps', JSON.stringify(appointments));
+         displayAppointments();
         }
         
         // --- LOGICA DO RASTREADOR DE HUMOR ---
@@ -1556,6 +1796,21 @@
          loadNotes(); 
          generateQuote(); // Gera uma frase assim que o app abre
         };
+
+        function confirmarAssinatura(plano) {
+         alert("Você selecionou o Plano " + plano + "! Redirecionando para o pagamento...");
+       }
+
+       function iniciarChamada() {
+         // Aqui você colocaria o link real da sua sala de vídeo
+         const linkChamada = "https://meet.google.com/new"; 
+    
+         const confirmar = confirm("Deseja iniciar a vídeo chamada com a Dra. Mariana agora?");
+    
+         if (confirmar) {
+             window.open(linkChamada, '_blank');
+           }
+       }
     </script>
 </body>
 </html>
