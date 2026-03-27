@@ -1471,14 +1471,15 @@
               </div>
           </section>
         </main>
-     </div> 
     
-     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
     <script>
         // --- INICIALIZAÇÃO ---
         window.onload = () => { 
             loadNotes(); 
-            startBreathing(); 
+            startBreathing();
+            generateQuote();
+            loadSettings();
+            displayAppointments();
         };
 
         function startExperience() {
@@ -1492,49 +1493,11 @@
         }
 
         function showTab(tabId, element) {
-          window.speechSynthesis.cancel();
-          isReading = false;
-          // 1. Esconde tudo
-         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-         document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-
-         // 2. Mostra a aba atual
-         const targetTab = document.getElementById(tabId);
-         if (targetTab) {
-             targetTab.classList.add('active');
-             element.classList.add('active');
-           }
-   
-         // 3. Lógica do Calendário (Passo 3)
-         if (tabId === 'calendario-page') {
-             // Aumentamos para 300ms para garantir que a transição de CSS terminou
-             setTimeout(() => {
-                 const calendarEl = document.getElementById('calendar');
-            
-                 if (!calendarEl) {
-                      console.error("Erro: A div com id 'calendar' não foi encontrada!");
-                      return;
-                   }
-
-                 if (!calendar) {
-                     calendar = new FullCalendar.Calendar(calendarEl, {
-                         initialView: 'dayGridMonth',
-                         locale: 'pt-br',
-                         headerToolbar: {
-                             left: 'prev,next today',
-                             center: 'title',
-                             right: 'dayGridMonth'
-                           }
-                       });
-                     calendar.render();
-                     console.log("Calendário renderizado pela primeira vez.");
-                   } else {
-                     calendar.updateSize();
-                     console.log("Tamanho do calendário atualizado.");
-                    }
-               }, 300);
-           }
-       }
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+        }
 
         // --- VARIÁVEIS DE CONTROLE ---
         let isBreathingActive = false;
@@ -1627,6 +1590,17 @@
          "Sua jornada vale a pena, continue firme.",
          "Cultive pensamentos bons e a vida florescerá."
        ];
+
+       function generateQuote() {
+         const textElement = document.getElementById('quote-text');
+         const randomIndex = Math.floor(Math.random() * quotes.length);
+
+         textElement.style.opacity = 0; // Efeito visual
+         setTimeout(() => {
+             textElement.innerText = `"${quotes[randomIndex]}"`;
+             textElement.style.opacity = 1;
+          }, 200);
+        }
 
         // Carregar consultas ao abrir o site
        document.addEventListener('DOMContentLoaded', displayAppointments);
@@ -2181,9 +2155,9 @@
          window.speechSynthesis.speak(utterance);
         }
 
-// SEGURANÇA: Para a voz automaticamente se o usuário mudar de aba no menu
-// Adicione esta linha dentro da sua função showTab(tabId, element)
-// window.speechSynthesis.cancel();
+      // SEGURANÇA: Para a voz automaticamente se o usuário mudar de aba no menu
+      // Adicione esta linha dentro da sua função showTab(tabId, element)
+      // window.speechSynthesis.cancel();
 
      // 5. Reset Seguro
       function resetAppData() {
