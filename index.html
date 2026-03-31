@@ -955,6 +955,28 @@
          font-weight: bold !important;
        }
 
+       /* No seu bloco de <style> */
+      #sobre a, #sobre button {
+         display: inline-block;
+         transition: transform 0.2s ease-in-out;
+        }
+
+      #sobre a:hover, #sobre button:hover {
+         transform: translateY(-5px) scale(1.1);
+       }
+
+       .spotify-container iframe {
+         background-color: #000;
+         box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+         border: none;
+       }
+
+      /* Opcional: Efeito de hover */
+      .spotify-container iframe:hover {
+         filter: brightness(1.1);
+         transition: 0.3s;
+       }
+
     </style>
 </head>
 <body id="app-body">
@@ -987,6 +1009,8 @@
             <div class="nav-link" onclick="showTab('biblioteca', this)"><i class="fas fa-book-open"></i> Biblioteca</div>
             <div class="nav-link" onclick="showTab('config-page', this)"><i class="fas fa-cog"></i> Configurações</div>
             <div class="nav-link" onclick="showTab('ajuda', this)"><i class="fas fa-headset"></i> Suporte</div>
+            <div class="nav-link" onclick="showTab('feedback', this)"><i class="fa-solid fa-comment"></i> Feedback</div>
+            <div class="nav-link" onclick="showTab('sobre', this)"><i class="fa-solid fa-circle-info"></i> Sobre Nós</div>
             <a class="btn-sos" onclick="triggerSOS()">🚨 EMERGÊNCIA</a>
         </aside>
 
@@ -1061,9 +1085,30 @@
                     <input type="checkbox"> <span>Agradecer por algo</span>
                 </label>
             </div>
-        </div>    
-    </div>
- </section>
+        </div>  
+        
+        <div class="card" style="margin-top: 20px;">
+          <h3 style="color: var(--light-purple); margin-bottom: 15px;">
+             <i class="fab fa-spotify"></i> Sons para sua Mente
+          </h3>
+         <p style="color: #888; font-size: 0.9rem; margin-bottom: 15px;">Escolha uma playlist para acompanhar seu momento:</p>
+    
+         <div class="spotify-container" style="display: flex; flex-direction: column; gap: 15px;">
+             <iframe style="border-radius:12px" 
+                 src="https://open.spotify.com/embed/playlist/3FixUcICt6cDhoqX5HCL9Y?si=c01153f7c17b4628" 
+                 width="100%" height="152" frameBorder="0" allowfullscreen="" 
+                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy">
+              </iframe>
+
+             <iframe style="border-radius:12px" 
+                 src="https://open.spotify.com/embed/playlist/0wPw1Zh8P9eW9M8ji44Yii?si=843ea73c39c04ba5&pt=642cb8a29d3fcb07769f68b466bd304a" 
+                 width="100%" height="152" frameBorder="0" allowfullscreen="" 
+                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy">
+             </iframe>
+          </div>
+      </div>
+ </div>
+</section>
 
             <section id="diario" class="tab-content">
                 <h2>Meu Diário</h2>
@@ -1270,6 +1315,97 @@
                      </div>
                  </div>
               </div>
+          </section>
+
+          <section id="feedback" class="tab-content">
+             <div style="margin-bottom: 25px;">
+                 <h2>Sua Opinião</h2>
+                 <p style="color: #888;">Como está sendo sua experiência com o MindHelp?</p>
+              </div>
+
+             <div class="card">
+                 <div style="margin-bottom: 20px; text-align: center;">
+                     <p style="margin-bottom: 10px;">Como você avalia o app?</p>
+                     <div class="star-rating" style="font-size: 1.5rem; color: #555; cursor: pointer;">
+                         <i class="far fa-star" onclick="rateApp(1)" id="star-1"></i>
+                         <i class="far fa-star" onclick="rateApp(2)" id="star-2"></i>
+                         <i class="far fa-star" onclick="rateApp(3)" id="star-3"></i>
+                         <i class="far fa-star" onclick="rateApp(4)" id="star-4"></i>
+                         <i class="far fa-star" onclick="rateApp(5)" id="star-5"></i>
+                      </div>
+                  </div>
+
+                 <div class="input-group">
+                     <label>O que podemos melhorar?</label>
+                     <textarea id="feedback-text" rows="4" 
+                         style="width: 100%; padding: 12px; margin-top: 10px; border-radius: 12px; border: 1px solid #444; background: #222; color: white; outline: none; resize: none;"
+                         placeholder="Conte-nos sua sugestão ou relate um erro..."></textarea>
+                 </div>
+
+                 <button class="btn-control" onclick="sendFeedback()" style="margin-top: 20px; width: 100%;">
+                      Enviar Feedback
+                 </button>
+             </div>
+
+             <div id="thanks-message" style="display: none; text-align: center; margin-top: 20px; color: var(--main-purple);">
+                 <i class="fas fa-check-circle" style="font-size: 2rem;"></i>
+                 <p style="margin-top: 10px;">Obrigado! Sua opinião nos ajuda a crescer.</p>
+             </div>
+          </section>
+
+          <section id="sobre" class="tab-content">
+             <div style="text-align: center; margin-bottom: 30px;">
+                 <i class="fas fa-hands-helping" style="font-size: 3rem; color: var(--main-purple); margin-bottom: 15px;"></i>
+                 <h2>Sobre o MindHelp</h2>
+                 <p style="color: #888;">Nossa missão é democratizar o cuidado com a saúde mental.</p>
+              </div>
+
+             <div class="card" style="margin-bottom: 20px;">
+                 <h3>Nossa Missão</h3>
+                 <p style="line-height: 1.6; margin-top: 10px; color: #ddd;">
+                     O MindHelp nasceu da ideia de que o bem-estar emocional não deve ser um luxo, mas um direito. 
+                     Combinamos tecnologia e psicologia para criar um porto seguro digital, onde você pode organizar 
+                     sua mente, monitorar seus hábitos e encontrar apoio em uma comunidade acolhedora.
+                     É um servidor inovador que conecta clientes a psicólogos especializados, oferecendo suporte personalizado para a saúde mental de forma acessível, segura e eficaz. Nossa missão é democratizar o acesso à terapia, tornando o cuidado psicológico mais próximo de quem precisa, independentemente de localização ou disponibilidade financeira.
+                  </p>
+              </div>
+
+             <div class="grid-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                 <div class="card">
+                     <i class="fas fa-shield-alt" style="color: var(--main-purple); margin-bottom: 10px;"></i>
+                     <h4>Privacidade</h4>
+                     <p style="font-size: 0.85rem; color: #888;">Seus dados são armazenados localmente e pertencem apenas a você.</p>
+                  </div>
+                 <div class="card">
+                     <i class="fas fa-heart" style="color: var(--main-purple); margin-bottom: 10px;"></i>
+                     <h4>Empatia</h4>
+                     <p style="font-size: 0.85rem; color: #888;">Desenvolvido com foco no acolhimento e na redução do estresse.</p>
+                    </div>
+               </div>
+
+             <div class="card" style="margin-top: 20px; text-align: center;">
+                 <h3>Contato & Suporte</h3>
+                 <p style="margin: 15px 0; color: #ddd;">Tem alguma dúvida ou quer fazer uma parceria?</p>
+                 <div style="display: flex; justify-content: center; gap: 20px; font-size: 1.2rem;">
+                      <a href="https://wa.me/5585991097732?text=Olá!%20Gostaria%20de%20falar%20com%20o%20suporte%20do%20MindHelp." 
+                         target="_blank" 
+                         title="Conversar no WhatsApp" 
+                         style="color: #25D366; transition: transform 0.3s;">
+                         <i class="fab fa-whatsapp"></i>
+                      </a>
+                      <a href="https://www.instagram.com/mindhelpbrasil" 
+                         target="_blank" 
+                         title="Siga-nos no Instagram" 
+                         style="color: #E1306C; transition: transform 0.3s; text-decoration: none;">
+                         <i class="fab fa-instagram"></i>
+                      </a>
+                      <div onclick="copyEmail()" class="contact-link" style="color: var(--main-purple); cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: bold;" title="Clique para copiar o e-mail">
+                         <i class="fas fa-envelope" style="font-size: 1.5rem;"></i>
+                         <span id="email-text">mindhelpofficial@gmail.com</span>
+                      </div>
+                  </div>
+                 <p style="font-size: 0.75rem; color: #555; margin-top: 20px;">MindHelp Prototyping v1.0.2026 - Feito com 💜 para você.</p>
+             </div>
           </section>
 
             <section id="consultas" class="tab-content">
@@ -1764,6 +1900,54 @@
             }
         }
 
+        let selectedRating = 0;
+
+       // Função para pintar as estrelas
+      function rateApp(rating) {
+         selectedRating = rating;
+         for (let i = 1; i <= 5; i++) {
+             const star = document.getElementById(`star-${i}`);
+             if (i <= rating) {
+                 star.classList.replace('far', 'fas');
+                 star.style.color = '#ffcc00'; // Cor dourada
+              } else {
+                 star.classList.replace('fas', 'far');
+                 star.style.color = '#555';
+               }
+           }
+       }
+
+       // Função para "enviar" o feedback
+       function sendFeedback() {
+         const text = document.getElementById('feedback-text').value;
+    
+         if (selectedRating === 0) {
+             alert("Por favor, selecione uma nota de 1 a 5 estrelas.");
+             return;
+           }
+
+         if (text.trim() === "") {
+             alert("Por favor, escreva um pequeno comentário.");
+             return;
+           }
+
+         // Aqui você poderia enviar para um servidor real. 
+         // Como é um protótipo, vamos apenas simular:
+         console.log(`Feedback Recebido! Nota: ${selectedRating}, Comentário: ${text}`);
+
+         // Esconde o formulário e mostra o agradecimento
+         document.querySelector('#feedback .card').style.display = 'none';
+         document.getElementById('thanks-message').style.display = 'block';
+
+         // Limpa os campos para um futuro envio
+         setTimeout(() => {
+             document.querySelector('#feedback .card').style.display = 'block';
+             document.getElementById('thanks-message').style.display = 'none';
+             document.getElementById('feedback-text').value = "";
+             rateApp(0); // Reseta as estrelas
+           }, 4000);
+       }
+
       // --- FUNÇÕES DE COMENTÁRIO ---
        function showReplyBox(postId) {
          const box = document.getElementById(`reply-box-${postId}`);
@@ -1867,6 +2051,27 @@
                 container.innerHTML += `<div class="msg bot">Anotei sua dúvida! Em breve um humano entrará em contato.</div>`;
                 container.scrollTop = container.scrollHeight;
             }, 1000);
+        }
+
+        function copyEmail() {
+         const email = "mindhelpofficial@gmail.com";
+    
+         // 1. Tenta abrir o aplicativo de e-mail primeiro
+         window.location.href = `mailto:${email}`;
+
+         // 2. Copia para a área de transferência como "Plano B"
+         navigator.clipboard.writeText(email).then(() => {
+             const emailSpan = document.getElementById('email-text');
+             const originalText = emailSpan.innerText;
+        
+             emailSpan.innerText = "E-mail copiado!";
+             emailSpan.style.color = "#25D366";
+        
+             setTimeout(() => {
+                 emailSpan.innerText = originalText;
+                 emailSpan.style.color = "";
+               }, 2000);
+           });
         }
 
         // --- SISTEMA DE ÁUDIO AMBIENTE ---
