@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="img/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         :root {
             --bg-black: #050505;
@@ -977,6 +978,108 @@
          transition: 0.3s;
        }
 
+       .mobile-nav {
+         display: none; /* Escondido no PC */
+        }
+
+       @media (max-width: 768px) {
+         .mobile-nav {
+             display: flex;
+             position: fixed;
+             bottom: 0;
+             left: 0;
+             width: 100%;
+             background: #111;
+             border-top: 1px solid #333;
+             justify-content: space-around;
+             padding: 10px 0;
+             z-index: 1000;
+            }
+    
+         .nav-btn {
+             flex-direction: column;
+             font-size: 0.7rem;
+             gap: 5px;
+            }
+
+         /* Adiciona um espaçamento no final do body para o menu não cobrir o conteúdo */
+         body {
+             padding-bottom: 70px;
+            }
+        }
+
+        @media (max-width: 768px) {
+         .container {
+             padding: 15px; /* Reduz margens laterais */
+            }
+
+         .card {
+             padding: 15px;
+             border-radius: 15px; /* Bordas mais arredondadas no mobile dão aspecto moderno */
+           }
+
+         h1 { font-size: 1.5rem; }
+         h2 { font-size: 1.3rem; }
+
+         /* Aumenta a área de toque dos botões (mínimo 44px) */
+         button, .btn-control {
+             min-height: 48px;
+             width: 100%; /* Botões largos são mais fáceis de clicar com o polegar */
+            }
+    
+         /* Grid de 2 colunas vira 1 coluna no celular */
+         .grid-container {
+             grid-template-columns: 1fr !important;
+            }
+        }
+
+        /* Media Query: Aplica estas regras apenas em telas menores que 768px */
+        @media (max-width: 768px) {
+    
+         /* 1. Garante que o container ocupe a largura toda com um respiro nas bordas */
+         .container, body {
+             padding: 10px;
+             width: 100%;
+             box-sizing: border-box;
+            }
+
+         /* 2. Faz as grades (grids) ficarem em uma coluna só */
+         .grid-container, .settings-grid {
+             display: flex !important;
+             flex-direction: column !important;
+             gap: 15px;
+            }
+
+         /* 3. Aumenta os textos para leitura confortável */
+         body {
+             font-size: 16px; /* Tamanho mínimo ideal para mobile */
+            }
+
+         h1 { font-size: 1.8rem; }
+         h2 { font-size: 1.5rem; }
+
+         /* 4. Botões e Inputs precisam ser grandes para o toque */
+         button, .btn-control, select, input, textarea {
+             width: 100% !important;
+             min-height: 50px; /* Altura ideal para não errar o clique */
+             font-size: 16px !important; /* Evita o zoom automático do iPhone ao focar */
+             margin-bottom: 10px;
+            }
+
+         /* 5. Ajusta os Cards para não terem larguras fixas */
+         .card {
+             width: 100% !important;
+             margin-left: 0 !important;
+             margin-right: 0 !important;
+             padding: 20px;
+            }
+
+         /* 6. Ajusta o player do Spotify */
+         iframe {
+             height: 80px; /* Versão mais compacta para sobrar espaço na tela */
+           }
+        }
+
     </style>
 </head>
 <body id="app-body">
@@ -1719,12 +1822,17 @@
          "Respire fundo. É apenas um dia ruim, não uma vida ruim.",
          "Você é mais forte do que imagina e mais capaz do que acredita.",
          "O melhor ainda está por vir.",
-         "Sua saúde mental é uma prioridade. Sua felicidade é essencial.",
          "Não importa a lentidão com que você vá, desde que não pare.",
          "Grandes batalhas são dadas a grandes guerreiros.",
          "Um passo de cada vez. Hoje você fez o seu melhor.",
          "Sua jornada vale a pena, continue firme.",
-         "Cultive pensamentos bons e a vida florescerá."
+         "Cultive pensamentos bons e a vida florescerá.",
+         "Pequenos passos também levam a grandes destinos.",
+         "O que você sente hoje não define quem você será amanhã.",
+         "Seja gentil consigo mesmo. Você está fazendo o seu melhor.",
+         "A sua força não vem do que você pode fazer, mas de superar o que você achou que não conseguiria.",
+         "Sua saúde mental é uma prioridade, não um luxo.",
+         "Você não precisa dar conta de tudo sozinho. Pedir ajuda é um sinal de coragem."
        ];
 
        function generateQuote() {
