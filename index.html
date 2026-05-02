@@ -122,7 +122,7 @@
             font-weight: 300;
             color: var(--light-purple);
             margin-bottom: 10px;
-            font-variant-numeric: tabular-nums; /* Evita que os números "pulem" */
+            font-variant-numeric: tabular-nums;
         }
 
         .breath-circle {
@@ -139,8 +139,8 @@
             font-size: 0.9rem;
             color: white;
             text-transform: uppercase;
-            transition: transform 4s ease-in-out; /* O JS vai mudar esse '4s' dinamicamente */
-            will-change: transform; /* Ajuda na performance da animação */
+            transition: transform 4s ease-in-out; 
+            will-change: transform; 
         }
 
         .breath-controls {
@@ -229,12 +229,11 @@
          margin-top: 20px;
         }
 
-        /* Ajuste para os cards da home ficarem com a mesma altura */
         .dashboard-grid .card {
          height: 100%;
          display: flex;
          flex-direction: column;
-         margin-bottom: 0; /* O gap da grid já resolve o espaçamento */
+         margin-bottom: 0; 
         }
 
         /* Estilo do Gerador de Frases */
@@ -447,7 +446,7 @@
          border: 1px solid var(--main-purple);
          padding: 15px;
          border-radius: 15px;
-         display: none; /* Só aparece quando um som toca */
+         display: none; 
          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
          z-index: 1000;
         }
@@ -503,7 +502,7 @@
       .habit-progress-fill {
          height: 100%;
          background: var(--main-purple);
-         width: 0%; /* Controlado pelo JS */
+         width: 0%; 
          transition: width 0.5s ease;
        }
 
@@ -679,7 +678,7 @@
          width: 100%;
          height: 100%;
          object-fit: cover;
-         opacity: 0.6; /* Efeito de espera */
+         opacity: 0.6; 
        }
 
       .video-overlay {
@@ -743,10 +742,10 @@
 
      .badge {
          position: absolute;
-         top: -15px;            /* Faz o badge "flutuar" para fora do card */
+         top: -15px;      
          left: 50%;
          transform: translateX(-50%);
-         background: linear-gradient(135deg, #a855f7, #7c3aed); /* Gradiente roxo vibrante */
+         background: linear-gradient(135deg, #a855f7, #7c3aed); 
          color: white;
          padding: 6px 20px;
          border-radius: 20px;
@@ -756,17 +755,15 @@
          letter-spacing: 1px;
          box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
          z-index: 10;
-         animation: pulse 2s infinite; /* Efeito de atenção discreto */
+         animation: pulse 2s infinite; 
        }
 
-     /* Animação para o badge não ficar estático */
      @keyframes pulse {
          0% { transform: translateX(-50%) scale(1); }
          50% { transform: translateX(-50%) scale(1.05); }
          100% { transform: translateX(-50%) scale(1); }
        }
 
-     /* Deixa o card do plano anual ainda mais destacado */
      .plan-card.featured {
          border: 2px solid #a855f7;
          box-shadow: 0 10px 30px rgba(168, 85, 247, 0.15);
@@ -824,17 +821,16 @@
 
      .total-price-hint {
          font-size: 0.85rem;
-         color: #a1a1a1;    /* Um cinza claro que combina com o roxo */
-         margin: 5px 0 15px 0; /* Espaço equilibrado em cima e embaixo */
-         display: block;    /* Garante que ele fique em uma linha própria */
+         color: #a1a1a1;  
+         margin: 5px 0 15px 0; 
+         display: block;   
          font-weight: 400;
        }
 
-     /* Opcional: destaque leve no plano anual para ajudar na venda */
      .plan-card.featured {
          border: 2px solid var(--main-purple);
          position: relative;
-         transform: scale(1.05); /* Deixa o plano anual levemente maior */
+         transform: scale(1.05);
        }
 
        /* --- ABA DE FÓRUM --- */
@@ -956,7 +952,6 @@
          font-weight: bold !important;
        }
 
-       /* No seu bloco de <style> */
       #sobre a, #sobre button {
          display: inline-block;
          transition: transform 0.2s ease-in-out;
@@ -972,14 +967,13 @@
          border: none;
        }
 
-      /* Opcional: Efeito de hover */
       .spotify-container iframe:hover {
          filter: brightness(1.1);
          transition: 0.3s;
        }
 
        .mobile-nav {
-         display: none; /* Escondido no PC */
+         display: none; 
         }
 
        @media (max-width: 768px) {
@@ -1002,7 +996,6 @@
              gap: 5px;
             }
 
-         /* Adiciona um espaçamento no final do body para o menu não cobrir o conteúdo */
          body {
              padding-bottom: 70px;
             }
@@ -1010,63 +1003,55 @@
 
         @media (max-width: 768px) {
          .container {
-             padding: 15px; /* Reduz margens laterais */
+             padding: 15px; 
             }
 
          .card {
              padding: 15px;
-             border-radius: 15px; /* Bordas mais arredondadas no mobile dão aspecto moderno */
+             border-radius: 15px;
            }
 
          h1 { font-size: 1.5rem; }
          h2 { font-size: 1.3rem; }
 
-         /* Aumenta a área de toque dos botões (mínimo 44px) */
          button, .btn-control {
              min-height: 48px;
-             width: 100%; /* Botões largos são mais fáceis de clicar com o polegar */
+             width: 100%; 
             }
     
-         /* Grid de 2 colunas vira 1 coluna no celular */
          .grid-container {
              grid-template-columns: 1fr !important;
             }
         }
 
-        /* Media Query: Aplica estas regras apenas em telas menores que 768px */
         @media (max-width: 768px) {
     
-         /* 1. Garante que o container ocupe a largura toda com um respiro nas bordas */
          .container, body {
              padding: 10px;
              width: 100%;
              box-sizing: border-box;
             }
 
-         /* 2. Faz as grades (grids) ficarem em uma coluna só */
          .grid-container, .settings-grid {
              display: flex !important;
              flex-direction: column !important;
              gap: 15px;
             }
 
-         /* 3. Aumenta os textos para leitura confortável */
          body {
-             font-size: 16px; /* Tamanho mínimo ideal para mobile */
+             font-size: 16px;
             }
 
          h1 { font-size: 1.8rem; }
          h2 { font-size: 1.5rem; }
 
-         /* 4. Botões e Inputs precisam ser grandes para o toque */
          button, .btn-control, select, input, textarea {
              width: 100% !important;
-             min-height: 50px; /* Altura ideal para não errar o clique */
-             font-size: 16px !important; /* Evita o zoom automático do iPhone ao focar */
+             min-height: 50px; 
+             font-size: 16px !important;
              margin-bottom: 10px;
             }
 
-         /* 5. Ajusta os Cards para não terem larguras fixas */
          .card {
              width: 100% !important;
              margin-left: 0 !important;
@@ -1074,9 +1059,8 @@
              padding: 20px;
             }
 
-         /* 6. Ajusta o player do Spotify */
          iframe {
-             height: 80px; /* Versão mais compacta para sobrar espaço na tela */
+             height: 80px; 
            }
         }
 
@@ -1759,7 +1743,7 @@
          if (isBreathingActive) {
              btnToggle.innerText = "Pausar";
              timerInterval = setInterval(updateTimer, 1000);
-         runBreathCycle(); // Inicia o ciclo
+         runBreathCycle();
          } else {
              btnToggle.innerText = "Retomar";
              clearInterval(timerInterval);
@@ -1774,7 +1758,6 @@
 
          const duration = speedSlider.value * 1000;
          speedVal.innerText = speedSlider.value;
-          // Aplica a transição suave
          circle.style.transition = `transform ${duration}ms ease-in-out`;
 
          if (isInhaling) {
@@ -1785,10 +1768,8 @@
              circle.innerText = "Expire";
             }
 
-         // ALTERNA O ESTADO: Se era true, vira false. Se era false, vira true.
          isInhaling = !isInhaling;
 
-         // Agenda a próxima fase do ciclo baseado no tempo escolhido
          breathTimeout = setTimeout(runBreathCycle, duration);
         }
 
@@ -1839,14 +1820,13 @@
          const textElement = document.getElementById('quote-text');
          const randomIndex = Math.floor(Math.random() * quotes.length);
 
-         textElement.style.opacity = 0; // Efeito visual
+         textElement.style.opacity = 0; 
          setTimeout(() => {
              textElement.innerText = `"${quotes[randomIndex]}"`;
              textElement.style.opacity = 1;
           }, 200);
         }
 
-        // Carregar consultas ao abrir o site
        document.addEventListener('DOMContentLoaded', displayAppointments);
 
        function saveAppointment() {
@@ -1864,7 +1844,6 @@
              date: new Date(date).toLocaleString('pt-BR')
            };
 
-         // Salvar no LocalStorage
          let appointments = JSON.parse(localStorage.getItem('mindhelp_apps')) || [];
          appointments.push(appointment);
          localStorage.setItem('mindhelp_apps', JSON.stringify(appointments));
@@ -1902,10 +1881,8 @@
         
         // --- LOGICA DO RASTREADOR DE HUMOR ---
         function setMood(mood, element) {
-         // Remove destaque dos outros emojis
          document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('active'));
     
-         // Destaca o selecionado
          element.classList.add('active');
     
          const feedback = document.getElementById('mood-feedback');
@@ -2010,7 +1987,6 @@
 
         let selectedRating = 0;
 
-       // Função para pintar as estrelas
       function rateApp(rating) {
          selectedRating = rating;
          for (let i = 1; i <= 5; i++) {
@@ -2025,7 +2001,6 @@
            }
        }
 
-       // Função para "enviar" o feedback
        function sendFeedback() {
          const text = document.getElementById('feedback-text').value;
     
@@ -2039,20 +2014,16 @@
              return;
            }
 
-         // Aqui você poderia enviar para um servidor real. 
-         // Como é um protótipo, vamos apenas simular:
          console.log(`Feedback Recebido! Nota: ${selectedRating}, Comentário: ${text}`);
 
-         // Esconde o formulário e mostra o agradecimento
          document.querySelector('#feedback .card').style.display = 'none';
          document.getElementById('thanks-message').style.display = 'block';
 
-         // Limpa os campos para um futuro envio
          setTimeout(() => {
              document.querySelector('#feedback .card').style.display = 'block';
              document.getElementById('thanks-message').style.display = 'none';
              document.getElementById('feedback-text').value = "";
-             rateApp(0); // Reseta as estrelas
+             rateApp(0);
            }, 4000);
        }
 
@@ -2068,7 +2039,7 @@
        function submitReply(postId) {
          const input = document.getElementById(`reply-input-${postId}`);
          const container = document.getElementById(`replies-container-${postId}`);
-         const savedName = localStorage.getItem('mindhelp_username') || "Você"; // Busca o nome
+         const savedName = localStorage.getItem('mindhelp_username') || "Você";
 
          if (input.value.trim() === "") return;
 
@@ -2092,7 +2063,6 @@
          input.value = "";
        }
 
-      // NOVA FUNÇÃO: Para apagar apenas o comentário específico
       function deleteReply(replyId) {
          const replyElement = document.getElementById(`reply-${replyId}`);
          if (replyElement) {
@@ -2137,13 +2107,10 @@
          if (confirm("Tem certeza que deseja apagar esta nota?")) {
              let notes = JSON.parse(localStorage.getItem('mindhelp_notes') || '[]');
         
-             // Remove a nota que tem o ID clicado
              notes = notes.filter(note => note.id !== id);
         
-             // Salva a nova lista sem a nota apagada
              localStorage.setItem('mindhelp_notes', JSON.stringify(notes));
         
-             // Atualiza a tela imediatamente
              loadNotes();
             }
        }
@@ -2164,10 +2131,8 @@
         function copyEmail() {
          const email = "mindhelpofficial@gmail.com";
     
-         // 1. Tenta abrir o aplicativo de e-mail primeiro
          window.location.href = `mailto:${email}`;
 
-         // 2. Copia para a área de transferência como "Plano B"
          navigator.clipboard.writeText(email).then(() => {
              const emailSpan = document.getElementById('email-text');
              const originalText = emailSpan.innerText;
@@ -2184,35 +2149,31 @@
 
         // --- SISTEMA DE ÁUDIO AMBIENTE ---
         let currentAudio = null;
-        let currentUrl = ""; // Variável para rastrear qual som está ativo
+        let currentUrl = "";
 
         function playAudio(name, url) {
          const player = document.getElementById('mini-player');
          const trackName = document.getElementById('track-name');
 
-         // SE o áudio clicado for o mesmo que já está tocando: PARA TUDO
          if (currentAudio && currentUrl === url) {
              stopAudio();
-             return; // Sai da função e não toca nada
+             return; 
            }
 
-         // Caso contrário, para o áudio anterior antes de tocar o novo
          if (currentAudio) {
              currentAudio.pause();
              currentAudio.currentTime = 0;
             }
 
-         // Configura o novo áudio
          currentAudio = new Audio(url);
          currentAudio.loop = true;
-         currentUrl = url; // Salva o link do áudio atual
+         currentUrl = url; 
 
          player.style.display = 'block';
          trackName.innerText = "Tocando: " + name;
 
          currentAudio.play().catch(e => console.log("Erro ao tocar:", e));
     
-         // Opcional: Adiciona uma classe visual para mostrar que o card está ativo
          updateActiveCard(url);
        }
 
@@ -2220,24 +2181,21 @@
          if (currentAudio) {
              currentAudio.pause();
              currentAudio = null;
-             currentUrl = ""; // Reseta a URL ativa
+             currentUrl = ""; 
            }
          document.getElementById('mini-player').style.display = 'none';
        }
 
        function updateActiveCard(url) {
-         // Remove a classe 'active' de todos os cards
          document.querySelectorAll('.sound-card').forEach(card => {
              card.classList.remove('active');
         
-             // Se o atributo onclick do card contiver a URL atual, marca como ativo
              if (card.getAttribute('onclick').includes(url)) {
                  card.classList.add('active');
                }
           });
        }
 
-      // Lembre-se de limpar os cards quando parar o som
        function stopAudio() {
          if (currentAudio) {
              currentAudio.pause();
@@ -2245,7 +2203,6 @@
              currentUrl = "";
            }
          document.getElementById('mini-player').style.display = 'none';
-         // Remove o destaque de todos os cards
          document.querySelectorAll('.sound-card').forEach(c => c.classList.remove('active'));
        }
       
@@ -2256,21 +2213,17 @@
 
       // --- LOGICA DE TROCA DE ABAS (SHOWTAB) ---
       function showTab(tabId, element) {
-         // Esconder todas as abas
          document.querySelectorAll('.tab-content').forEach(tab => {
              tab.classList.remove('active');
            });
     
-         // Remover classe ativa de todos os links
          document.querySelectorAll('.nav-link').forEach(link => {
              link.classList.remove('active');
            });
 
-         // Mostrar a aba selecionada
          document.getElementById(tabId).classList.add('active');
          element.classList.add('active');
 
-         // Se sair da aba de meditação e não houver áudio tocando, esconde o player
          if(tabId !== 'meditacao' && !currentAudio) {
              document.getElementById('mini-player').style.display = 'none';
            }
@@ -2284,7 +2237,6 @@
           alert(`Conectando ao sistema de agendamento seguro para: ${professional}.\n\nEm um sistema real, aqui abriria um calendário integrado (como Google Calendar ou Calendly).`);
         }
 
-        // Carregar hábitos ao iniciar
         window.addEventListener('load', () => {
          updateHabitUI();
         });
@@ -2302,7 +2254,6 @@
              return;
            }
 
-         // Incrementa a sequência
          habitData[type].streak += 1;
          habitData[type].lastDone = today;
 
@@ -2316,12 +2267,10 @@
              water: { streak: 0 }
            };
 
-         // Atualiza Meditação
          const medStreak = habitData.meditation.streak;
          document.getElementById('streak-meditation').innerText = `Sequência: ${medStreak} dias`;
-         document.getElementById('progress-meditation').style.width = `${Math.min(medStreak * 14.2, 100)}%`; // 14.2% por dia para fechar 100% em 7 dias
+         document.getElementById('progress-meditation').style.width = `${Math.min(medStreak * 14.2, 100)}%`; 
 
-         // Atualiza Água
          const waterStreak = habitData.water.streak;
          document.getElementById('streak-water').innerText = `Sequência: ${waterStreak} dias`;
          document.getElementById('progress-water').style.width = `${Math.min(waterStreak * 14.2, 100)}%`;
@@ -2335,7 +2284,6 @@
        }
 
        function openArticle(topic) {
-         // Banco de dados de links reais
          const resources = {
              'Ansiedade': {
                  title: 'Entendendo a Ansiedade (PUCRS Online)',
@@ -2354,7 +2302,6 @@
          const data = resources[topic];
 
          if (data) {
-             // Criar um modal ou confirmação simples antes de sair do app
              if (confirm(`Deseja abrir o artigo científico sobre "${data.title}"?`)) {
                  window.open(data.url, '_blank');
                 }
@@ -2365,7 +2312,7 @@
 
         window.onload = () => { 
          loadNotes(); 
-         generateQuote(); // Gera uma frase assim que o app abre
+         generateQuote(); 
         };
 
         function confirmarAssinatura(plano) {
@@ -2373,7 +2320,6 @@
        }
 
        function iniciarChamada() {
-         // Aqui você colocaria o link real da sua sala de vídeo
          const linkChamada = "https://meet.google.com/new"; 
     
          const confirmar = confirm("Deseja iniciar a vídeo chamada com a Dra. Mariana agora?");
@@ -2385,7 +2331,6 @@
 
        // --- FUNÇÕES DE CONFIGURAÇÃO ---
 
-      // 1. Salvar o nome do usuário para usar no Fórum
       function saveProfile() {
          const userName = document.getElementById('settings-name').value;
          if (userName.trim() === "") {
@@ -2403,20 +2348,17 @@
            }
        }
 
-       // 1. Atualizar e Salvar Tamanho da Fonte
       function updateFontSize(size) {
          document.documentElement.style.fontSize = size;
          localStorage.setItem('pref_font_size', size);
         }
 
-       // 2. Alto Contraste (Preto e Branco puro para melhor leitura)
       function toggleContrast() {
          document.body.classList.toggle('high-contrast');
          const isDark = document.body.classList.contains('high-contrast');
          localStorage.setItem('pref_contrast', isDark);
         }
 
-      // 3. Escala de Cinza (Ajuda no foco e daltonismo)
       function toggleGrayscale() {
          if (document.documentElement.style.filter === "grayscale(100%)") {
              document.documentElement.style.filter = "none";
@@ -2425,40 +2367,34 @@
            }
         }
 
-      // 4. Leitura de Texto (Sintetizador de Voz)
-      let isReading = false; // Rastreador de estado da voz
+      let isReading = false; 
 
       function readPageContent() {
          const btn = document.querySelector('[onclick="readPageContent()"]');
 
-         // Se já estiver lendo, a função agora serve para PARAR
          if (isReading) {
              window.speechSynthesis.cancel();
              isReading = false;
              btn.innerHTML = '<i class="fas fa-volume-up"></i> Ouvir';
-             btn.style.background = ""; // Volta ao original
+             btn.style.background = ""; 
              return;
            }
 
-         // Pega o texto da aba que está visível no momento
           const activeTab = document.querySelector('.tab-content.active');
           if (!activeTab) return;
 
-          // Limpa textos de botões e inputs para não ler "sujeira"
           const textToRead = activeTab.innerText;
 
           const utterance = new SpeechSynthesisUtterance(textToRead);
           utterance.lang = 'pt-BR';
           utterance.rate = 1.1;
 
-         // Quando começar a falar
           utterance.onstart = () => {
              isReading = true;
              btn.innerHTML = '<i class="fas fa-stop"></i> Parar Leitura';
-             btn.style.background = "#ff4d4d"; // Cor de destaque para indicar que está ativo
+             btn.style.background = "#ff4d4d"; 
            };
 
-         // Quando terminar naturalmente ou for cancelado
           utterance.onend = () => {
              isReading = false;
              btn.innerHTML = '<i class="fas fa-volume-up"></i> Ouvir';
@@ -2468,11 +2404,6 @@
          window.speechSynthesis.speak(utterance);
         }
 
-      // SEGURANÇA: Para a voz automaticamente se o usuário mudar de aba no menu
-      // Adicione esta linha dentro da sua função showTab(tabId, element)
-      // window.speechSynthesis.cancel();
-
-     // 5. Reset Seguro
       function resetAppData() {
           if(confirm('Tem certeza? Isso apagará permanentemente seu diário, hábitos e consultas.')) {
              localStorage.clear();
